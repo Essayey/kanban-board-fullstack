@@ -1,10 +1,11 @@
 const Router = require('express');
 const router = new Router();
-const cardController = require('../controllers/cardController')
+const cardController = require('../controllers/cardController');
+const authMiddleware = require('../middleware/authMiddleware');
 
-router.post('/', cardController.create) // Create card
-router.get('/:id', cardController.getOne) // Get card by id
-router.put('/', cardController.update) // Update card by id
-router.delete('/', cardController.delete) // Delete card by id
+router.post('/', authMiddleware, cardController.create) // Create card
+router.get('/:id', authMiddleware, cardController.getOne) // Get card by id
+router.put('/', authMiddleware, cardController.update) // Update card by id
+router.delete('/', authMiddleware, cardController.delete) // Delete card by id
 
 module.exports = router

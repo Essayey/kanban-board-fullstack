@@ -1,5 +1,6 @@
-const { Board } = require('../models/models')
+const { Board, List, Card } = require('../models/models')
 const { UserBoard } = require('../models/models')
+
 const ApiError = require('../error/ApiError')
 
 
@@ -18,8 +19,28 @@ class BoardController {
     }
     async getOne(req, res, next) {
         const { id } = req.params;
+        // Find board
+        // This board includes lists array
+        // Lists array include cards array
+        // So, we get board object with all needed information
+        const board = await Board.findOne({
+            include: [{
+                model: List,
+                where: { boardId: id },
+                required: false,
+                include: [{
+                    model: Card,
+                    where: {
+                        listId: await List.findAll(
+                            { where: { boardId: id }, attributes: ['id'] })
+                            .then(lists => lists.map(list => list.id))
+                    },
+                    required: false
+                }]
+            }],
+            where: { id }
+        });
 
-        const board = await Board.findOne({ where: { id } });
         if (!board) {
             return next(ApiError.notFound('Доска не найдена'), req, res);
         }
@@ -27,7 +48,8 @@ class BoardController {
         if (!hasAccess) {
             return next(ApiError.forbidden('У вас нет доступа к этой доске'));
         }
-        res.json({ board });
+
+        res.json(board);
     }
     // TODO: Add owner role, who can delete board
     // Add invite to the board functionality
@@ -42,7 +64,8 @@ class BoardController {
         if (!hasAccess) {
             return next(ApiError.forbidden('У вас нет доступа к этой доске'));
         }
-        const deletedBoard = await Board.destroy({ where: { id } });
+
+        await Board.destroy({ where: { id } });
         res.json({ message: "Доска успешно удалена!" });
     }
 }

@@ -1,5 +1,6 @@
 const ApiError = require("../error/ApiError");
 const { Card, List, UserBoard } = require("../models/models");
+const { Op } = require("sequelize");
 
 class CardController {
     async create(req, res, next) {
@@ -21,14 +22,32 @@ class CardController {
 
         res.json(card);
     }
-    async getOne(req, res) {
+    async getOne(req, res, next) {
+        const { id } = req.params
+        const card = await Card.findOne({ where: { id } })
 
+        if (!card) {
+            return next(ApiError.badRequest('Карточки не существует'));
+        }
+
+        res.json(card);
     }
     async update(req, res) {
 
     }
-    async delete(req, res) {
+    async delete(req, res, next) {
+        const { id } = req.body
+        const card = await Card.findOne({ where: { id } });
+        if (!card) {
+            next(ApiError.badRequest('Карточки не существует'));
+        }
+        await card.destroy();
 
+        await Card.findAll({
+            where: { order: { [Op.gt]: card.order }, listId: card.listId }
+        }).then(cards => cards.map(card => card.decrement('order')));
+
+        res.json("Успешно")
     }
 }
 

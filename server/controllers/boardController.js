@@ -44,6 +44,7 @@ class BoardController {
         if (!board) {
             return next(ApiError.notFound('Доска не найдена'), req, res);
         }
+
         const hasAccess = await UserBoard.findOne({ where: { userId: req.user.id, boardId: id } });
         if (!hasAccess) {
             return next(ApiError.forbidden('У вас нет доступа к этой доске'));
@@ -51,6 +52,38 @@ class BoardController {
 
         res.json(board);
     }
+    async updateBackground(req, res, next) {
+        const { id, value } = req.body;
+        const board = await Board.findOne({ where: { id } });
+        if (!board) {
+            return next(ApiError.badRequest('Доска не найдена'));
+        }
+        const hasAccess = await UserBoard.findOne({ where: { userId: req.user.id, boardId: id } });
+        if (!hasAccess) {
+            return next(ApiError.forbidden('У вас нет доступа к этой доске'));
+        }
+        board.set({ background: value });
+        await board.save();
+
+        return res.json(board);
+    }
+
+    async updateName(req, res, next) {
+        const { id, value } = req.body;
+        const board = await Board.findOne({ where: { id } });
+        if (!board) {
+            return next(ApiError.badRequest('Доска не найдена'));
+        }
+        const hasAccess = await UserBoard.findOne({ where: { userId: req.user.id, boardId: id } });
+        if (!hasAccess) {
+            return next(ApiError.forbidden('У вас нет доступа к этой доске'));
+        }
+        board.set({ name: value });
+        await board.save();
+
+        return res.json(board);
+    }
+
     // TODO: Add owner role, who can delete board
     // Add invite to the board functionality
     async delete(req, res, next) {

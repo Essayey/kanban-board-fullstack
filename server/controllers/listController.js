@@ -14,20 +14,28 @@ class ListController {
         const list = await List.create({ title, boardId, order: await List.count({ where: { boardId } }) });
         res.json({ list });
     }
+    async updateTitle(req, res, next) {
+        const { id, value } = req.body;
+        const list = await List.findOne({ where: { id } });
+        if (!list) {
+            return next(ApiError.badRequest('Списка не существует'));
+        }
+        list.set({ title: value });
+        await list.save();
+
+        return res.json(list);
+    }
     async delete(req, res, next) {
         const { id } = req.body;
         const list = await List.findOne({ where: { id } });
         if (!list) {
             return next(ApiError.badRequest('Списка не существует'));
         }
-        await List.destroy({ where: { id } });
+        await list.destroy();
 
         await List.findAll({
-            where: { order: { [Op.gt]: list.order } }
+            where: { order: { [Op.gt]: list.order }, boardId: list.boardId }
         }).then(lists => lists.map(list => list.decrement('order')));
-
-
-
 
         return res.json('Успешно')
     }

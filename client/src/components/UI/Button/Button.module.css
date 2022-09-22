@@ -1,0 +1,18 @@
+.Button {
+    border: none;
+    padding: 12px 15px;
+    border-radius: 4px;
+    background: #454ade;
+    color: #fff;
+    font-size: 16px;
+    font-weight: 700;
+
+    cursor: pointer;
+    -webkit-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+}
+
+.Button:active {
+    background: #3d41b5;
+}

@@ -3,3 +3,12 @@
     margin: 0;
     box-sizing: border-box;
 }
+
+/* Pallete
+    Red #F56476
+*/
+
+body {
+    background: #fff;
+    font-family: "Segoe UI", SegoeUI, "Helvetica Neue", Helvetica, Arial, sans-serif;
+}

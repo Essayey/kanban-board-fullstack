@@ -32,14 +32,35 @@ class CardController {
 
         res.json(card);
     }
-    async update(req, res) {
+    async updateTitle(req, res, next) {
+        const { id, value } = req.body
+        const card = await Card.findOne({ where: { id } });
+        if (!card) {
+            return next(ApiError.badRequest('Карточки не существует'));
+        }
 
+        card.set({ title: value });
+        await card.save();
+
+        return res.json(card);
+    }
+    async updateDescription(req, res) {
+        const { id, value } = req.body
+        const card = await Card.findOne({ where: { id } });
+        if (!card) {
+            return next(ApiError.badRequest('Карточки не существует'));
+        }
+
+        card.set({ description: value });
+        await card.save();
+
+        return res.json(card);
     }
     async delete(req, res, next) {
         const { id } = req.body
         const card = await Card.findOne({ where: { id } });
         if (!card) {
-            next(ApiError.badRequest('Карточки не существует'));
+            return next(ApiError.badRequest('Карточки не существует'));
         }
         await card.destroy();
 

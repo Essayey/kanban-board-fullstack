@@ -1,0 +1,34 @@
+.Main {
+    width: 100vw;
+    height: calc(100vh - 60px);
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.Main__container {
+    max-width: 90%;
+    min-width: 400px;
+    min-height: 400px;
+    margin: 0 auto;
+}
+
+.Main__inner {
+    display: flex;
+    justify-content: space-between;
+}
+
+.Main__text {
+    width: 50%;
+}
+
+.Main__img {
+    width: 50%;
+    height: 100%;
+}
+
+.Main__img img {
+    height: 100%;
+    width: 100%;
+}

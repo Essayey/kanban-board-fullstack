@@ -1,0 +1,10 @@
+.Card {
+    width: 100%;
+    min-height: 30px;
+    background: #f5f5f5;
+    border-radius: 4px;
+}
+
+.Card+.Card {
+    margin-top: 10px;
+}

@@ -1,0 +1,31 @@
+.List {
+    width: 250px;
+    min-height: fit-content;
+    background: #ffffffa0;
+    border-radius: 4px;
+    padding: 5px;
+
+    -webkit-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+}
+
+.List__cards {
+    margin-top: 10px;
+}
+
+.List__add {
+    padding: 8px;
+    width: 100%;
+    cursor: pointer;
+    background: transparent;
+    outline: none;
+    border: none;
+    margin-top: 5px;
+    margin-bottom: 5px;
+    border-radius: 4px;
+}
+
+.List__add:hover {
+    background-color: #00000020;
+}

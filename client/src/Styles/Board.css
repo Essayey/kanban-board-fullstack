@@ -1,0 +1,14 @@
+.Board {
+    display: flex;
+}
+
+.Board__inner {
+    width: calc(100vw - 250px);
+    background: #ffaa0021;
+    padding: 10px;
+}
+
+.Board__lists {
+    display: flex;
+    gap: 20px;
+}

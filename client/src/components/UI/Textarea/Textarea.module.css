@@ -1,0 +1,17 @@
+.CardInput {
+    width: 100%;
+    min-height: 40px;
+    font-size: 16px;
+    background: #f9f9f9;
+    border-radius: 4px;
+    outline: none;
+    border: none;
+    margin-top: 5px;
+    padding: 2px;
+    resize: none;
+    overflow: hidden;
+
+    -webkit-box-shadow: 0px 2px 8px 0px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 0px 2px 8px 0px rgba(34, 60, 80, 0.2);
+    box-shadow: 0px 2px 8px 0px rgba(34, 60, 80, 0.2);
+}

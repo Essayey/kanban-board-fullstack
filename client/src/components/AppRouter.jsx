@@ -7,10 +7,10 @@ const AppRouter = () => {
     return (
         <Routes>
             {isAuth && privateRoutes.map(route =>
-                <Route path={route.path} element={<route.Component />} />
+                <Route path={route.path} key={route.path} element={<route.Component />} />
             )}
             {publicRoutes.map(route =>
-                <Route path={route.path} element={<route.Component />} />
+                <Route path={route.path} key={route.path} element={<route.Component />} />
             )}
             <Route path='*' element={<Navigate to='/' replace />} />
         </Routes>

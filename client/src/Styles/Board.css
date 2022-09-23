@@ -6,6 +6,9 @@
     width: calc(100vw - 250px);
     background: #ffaa0021;
     padding: 10px;
+
+    width: fit-content;
+    overflow-x: scroll;
 }
 
 .Board__lists {

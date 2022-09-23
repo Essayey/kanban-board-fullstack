@@ -7,9 +7,9 @@ const Sidebar = () => {
     const boards = [{ name: "board1", id: '1' },
     { name: "board2", id: '2' },
     { name: "board3", id: '3' },
-    { name: "board1", id: '1' },
-    { name: "board2", id: '2' },
-    { name: "board3", id: '3' },]
+    { name: "board1", id: '4' },
+    { name: "board2", id: '5' },
+    { name: "board3", id: '6' },]
 
     const navigate = useNavigate();
 
@@ -18,7 +18,7 @@ const Sidebar = () => {
             <h2 style={{ paddingLeft: 5 }}>Мои доски</h2>
             <div className="Sidebar__list">
                 {boards.map(board =>
-                    <div className={'Sidebar__link'} onClick={() => navigate(BOARDS_ROUTE + '/' + board.id)}>{board.name}</div>
+                    <div key={board.id} className={'Sidebar__link'} onClick={() => navigate(BOARDS_ROUTE + '/' + board.id)}>{board.name}</div>
                 )}
             </div>
         </div>

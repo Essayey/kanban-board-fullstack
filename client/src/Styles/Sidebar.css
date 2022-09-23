@@ -1,0 +1,20 @@
+.Sidebar {
+    width: 250px;
+    height: calc(100vh - 60px);
+    background-color: #00000011;
+}
+
+.Sidebar__list {
+    display: flex;
+    flex-direction: column;
+    border-bottom: 1px solid #00000021;
+}
+
+.Sidebar__link {
+    padding: 5px 16px;
+    cursor: pointer;
+}
+
+.Sidebar__link:hover {
+    background-color: #00000021;
+}

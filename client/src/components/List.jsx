@@ -6,8 +6,8 @@ import Textarea from './UI/Textarea/Textarea';
 import Input from './UI/Input/Input'
 import Button from './UI/Button/Button'
 
-import { useHide } from '../hooks/useHide'
-import { submitOnEnter } from '../utils/utils';
+import { useHide } from '../hooks'
+import { submitOnEnter } from '../utils';
 
 const List = ({ title }) => {
     const cards = ['card1', 'card2', 'card3', 'card4'];

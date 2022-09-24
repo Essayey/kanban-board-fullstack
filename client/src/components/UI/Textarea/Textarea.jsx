@@ -1,5 +1,5 @@
 import React, { useEffect, useRef } from 'react'
-import { resizeTextArea } from '../../../utils/utils';
+import { resizeTextArea } from '../../../utils';
 import styles from './Textarea.module.css'
 
 const Textarea = (props) => {

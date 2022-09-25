@@ -63,8 +63,9 @@ const List = ({ title }) => {
                 <div className="List__cards">
                     {cards.map(card => <Card title={card} key={card} />)}
                     {cardAdding &&
-                        <form ref={formRef} onSubmit={e => addCard(e)}>
+                        <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
                             <Textarea
+                                style={{ marginTop: 0 }}
                                 autoFocus
                                 onKeyPress={e => submitOnEnter(e, formRef)}
                                 value={cardName}
@@ -72,7 +73,7 @@ const List = ({ title }) => {
                             />
                             <div style={{ display: 'flex', justifyContent: 'space-between' }}>
                                 <Button style={{ padding: 7, marginTop: 7 }} type='submit'>Add card</Button>
-                                <Button onClick={closeAddform} style={{ padding: 7, marginTop: 7 }}>Закрыть</Button>
+                                <Button onClick={closeAddform} style={{ padding: 7, marginTop: 10 }}>Закрыть</Button>
                             </div>
 
                         </form>

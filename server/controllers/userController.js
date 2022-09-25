@@ -20,7 +20,7 @@ class UserController {
         }
         const candidate = await User.findOne({ where: { email } });
         if (candidate) {
-            return next(Api.Error.badRequest('Пользователь с таким email уже существует'));
+            return next(ApiError.badRequest('Пользователь с таким email уже существует'));
         }
         const hashPassword = await bcrypt.hash(password, 4);
         const user = await User.create({ email, password: hashPassword, nickname: nickname || email });

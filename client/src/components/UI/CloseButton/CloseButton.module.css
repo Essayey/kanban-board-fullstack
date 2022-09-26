@@ -1,0 +1,9 @@
+.CloseButton {
+    width: 30px;
+    height: 30px;
+    background: url('./icons8-close.svg');
+    outline: none;
+    border: none;
+    content: '';
+    cursor: pointer
+}

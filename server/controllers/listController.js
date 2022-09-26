@@ -1,6 +1,7 @@
 const ApiError = require('../error/ApiError');
 const { List, UserBoard } = require('../models/models')
 const { Op } = require("sequelize");
+const getBoard = require("./utils");
 
 class ListController {
     async create(req, res, next) {
@@ -12,7 +13,8 @@ class ListController {
         }
 
         const list = await List.create({ title, boardId, order: await List.count({ where: { boardId } }) });
-        res.json({ list });
+
+        res.json(await getBoard(list.boardId));
     }
     async updateTitle(req, res, next) {
         const { id, value } = req.body;

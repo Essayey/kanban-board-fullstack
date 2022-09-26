@@ -58,12 +58,15 @@ const List = ({ title, cards, id }) => {
     return (
         <div className="List">
             {titleEditing
-                ? <form ref={inputRef} onSubmit={e => editTitle(e)}>
+                ? <form
+                    style={{}}
+                    ref={inputRef}
+                    onSubmit={e => editTitle(e)}>
                     <Input
                         value={listTitle}
                         onChange={e => setListTitle(e.target.value)}
                         autoFocus
-                        style={{ height: 24 }}
+                        style={{ height: 24, fontWeight: 700, fontSize: 18, margin: 0, padding: 0 }}
                     />
                 </form>
                 : <h3 onClick={() => setTitleEditing(true)}>{title}</h3>

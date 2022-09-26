@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useRef, useState } from 'react'
 import '../Styles/List.css'
 import Card from './Card';
 
@@ -8,9 +8,11 @@ import Button from './UI/Button/Button'
 
 import { useHide } from '../hooks'
 import { submitOnEnter } from '../utils';
+import { cardApi } from '../http/cardAPI';
+import { Context } from '..';
 
-const List = ({ title, cards }) => {
-
+const List = ({ title, cards, id }) => {
+    const { boards } = useContext(Context)
     // Edit title
     const [titleEditing, setTitleEditing] = useState(false);
     const [listTitle, setListTitle] = useState(title);
@@ -42,6 +44,7 @@ const List = ({ title, cards }) => {
     const addCard = e => {
         e.preventDefault();
         // Request //
+        cardApi.create(id, cardName).then(board => boards.setBoard(board));
         closeAddform();
     }
 

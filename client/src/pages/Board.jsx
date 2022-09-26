@@ -15,13 +15,13 @@ const Board = observer(() => {
     useEffect(() => {
         boardApi.getBoard(id).then(data => boards.setBoard(data));
     }, [id])
-    console.log(boards.current)
+
     return (
         <div className='Board'>
             <Sidebar />
             <div className="Board__inner">
                 <div className="Board__lists">
-                    {boards.current?.lists?.map(list => <List title={list.title} key={list.id} cards={list.cards} />)}
+                    {boards.current?.lists?.map(list => <List title={list.title} key={list.id} cards={list.cards} id={list.id} />)}
 
                 </div>
             </div>

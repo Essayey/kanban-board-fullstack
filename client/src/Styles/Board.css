@@ -3,15 +3,34 @@
 }
 
 .Board__inner {
-    width: calc(100vw - 250px);
+    min-width: calc(100vw - 250px);
     background: #ffaa0021;
     padding: 10px;
 
     width: fit-content;
-    overflow-x: scroll;
+    overflow-x: auto;
 }
 
 .Board__lists {
     display: flex;
     gap: 20px;
+}
+
+.Board__addList {
+    min-width: 300px;
+    height: fit-content;
+    background: #00000022;
+    border-radius: 4px;
+    padding: 10px;
+
+    -webkit-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+    -moz-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+    box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
+}
+
+.Board__addList-btns {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 10px;
 }

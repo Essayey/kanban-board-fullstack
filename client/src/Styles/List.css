@@ -1,17 +1,22 @@
 .List {
-    min-width: 250px;
+    min-width: 300px;
     height: fit-content;
+    max-height: calc(100vh - 100px);
     background: #ffffffa0;
     border-radius: 4px;
-    padding: 5px;
+    padding: 10px;
 
     -webkit-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
     -moz-box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
     box-shadow: 4px 4px 13px 3px rgba(34, 60, 80, 0.2);
 }
 
+
 .List__cards {
     margin-top: 10px;
+    max-height: calc(100vh - 200px);
+    overflow-y: auto;
+    padding-bottom: 10px;
 }
 
 .List__add {

@@ -4,14 +4,14 @@ export default class BoardStore {
     constructor() {
         this._boards = []
 
-        this._board = []
+        this._board = {}
         makeAutoObservable(this)
     }
 
     setBoards(boards) {
         this._boards = boards;
     }
-    setBoards(board) {
+    setBoard(board) {
         this._board = board;
     }
     get all() {

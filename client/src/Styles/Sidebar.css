@@ -19,3 +19,7 @@
 .Sidebar__link:hover {
     background-color: #00000021;
 }
+
+.Sidebar__link-active {
+    background-color: #00000011;
+}

@@ -1,6 +1,7 @@
 const ApiError = require("../error/ApiError");
 const { Card, List, UserBoard } = require("../models/models");
 const { Op } = require("sequelize");
+const getBoard = require("./utils");
 
 class CardController {
     async create(req, res, next) {
@@ -20,7 +21,7 @@ class CardController {
             return next(ApiError.forbidden('У вас нет доступа к этой доске'));
         }
 
-        res.json(card);
+        res.json(await getBoard(list.boardId));
     }
     async getOne(req, res, next) {
         const { id } = req.params

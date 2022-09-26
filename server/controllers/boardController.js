@@ -1,7 +1,8 @@
 const { Board, List, Card } = require('../models/models')
 const { UserBoard } = require('../models/models')
 
-const ApiError = require('../error/ApiError')
+const ApiError = require('../error/ApiError');
+const getBoard = require('./utils');
 
 
 class BoardController {
@@ -23,23 +24,7 @@ class BoardController {
         // This board includes lists array
         // Lists array include cards array
         // So, we get board object with all needed information
-        const board = await Board.findOne({
-            include: [{
-                model: List,
-                where: { boardId: id },
-                required: false,
-                include: [{
-                    model: Card,
-                    where: {
-                        listId: await List.findAll(
-                            { where: { boardId: id }, attributes: ['id'] })
-                            .then(lists => lists.map(list => list.id))
-                    },
-                    required: false
-                }]
-            }],
-            where: { id }
-        });
+        const board = await getBoard(id);
 
         if (!board) {
             return next(ApiError.notFound('Доска не найдена'), req, res);

@@ -10,6 +10,7 @@ import { useHide } from '../hooks'
 import { submitOnEnter } from '../utils';
 import { cardApi } from '../http/cardAPI';
 import { Context } from '..';
+import { action } from 'mobx';
 
 const List = ({ title, cards, id }) => {
     const { boards } = useContext(Context)
@@ -44,7 +45,9 @@ const List = ({ title, cards, id }) => {
     const addCard = e => {
         e.preventDefault();
         // Request //
-        cardApi.create(id, cardName).then(board => boards.setBoard(board));
+        // cardApi.create(id, cardName).then(action(data => boards.addCard(data)));
+        boards.fetchCard(id, cardName);
+        console.log(id);
         closeAddform();
     }
 

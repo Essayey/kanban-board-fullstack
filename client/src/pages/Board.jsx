@@ -12,6 +12,7 @@ import Button from '../components/UI/Button/Button'
 import CloseButton from '../components/UI/CloseButton/CloseButton'
 import { useHide } from '../hooks'
 import { listApi } from '../http/listAPI'
+import { action } from 'mobx'
 
 const Board = observer(() => {
     const { boards } = useContext(Context);
@@ -19,6 +20,7 @@ const Board = observer(() => {
 
     useEffect(() => {
         boardApi.getBoard(id).then(data => boards.setBoard(data));
+        boardApi.getBoard(id).then(data => console.log(data));
     }, [id])
 
     // Add list
@@ -30,7 +32,6 @@ const Board = observer(() => {
         setListTitle('');
         setIsListAdding(false);
     }
-
     const addList = e => {
         e.preventDefault();
         listApi.create(id, listTitle).then(data => boards.setBoard(data));

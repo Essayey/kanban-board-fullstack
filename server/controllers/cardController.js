@@ -21,7 +21,7 @@ class CardController {
             return next(ApiError.forbidden('У вас нет доступа к этой доске'));
         }
 
-        res.json(await getBoard(list.boardId));
+        res.json(card);
     }
     async getOne(req, res, next) {
         const { id } = req.params

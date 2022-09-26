@@ -15,7 +15,7 @@ class BoardController {
         const userBoards = await UserBoard.findAll({ where: { userId: req.user.id }, attributes: ['boardId'] });
         const boardIds = userBoards.map(i => i.boardId);
         const boards = await Board.findAll({ where: { id: boardIds } })
-        return res.json(boards);
+        return res.json({ boards });
     }
     async getOne(req, res, next) {
         const { id } = req.params;

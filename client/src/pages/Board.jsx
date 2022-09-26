@@ -1,25 +1,32 @@
-import React from 'react'
+import React, { useContext } from 'react'
 import '../Styles/Board.css'
 import Sidebar from '../components/Sidebar'
 import List from '../components/List'
+import { useEffect } from 'react'
+import { boardApi } from '../http/boardAPI'
+import { useParams } from 'react-router-dom'
+import { Context } from '..'
+import { observer } from 'mobx-react-lite'
 
-const Board = () => {
-    const lists = [{ title: 'list1', id: 0 },
-    { title: 'list2', id: 1 },
-    { title: 'list3', id: 2 }, { title: 'list1', id: 3 },
-    { title: 'list2', id: 4 }, { title: 'list2', id: 5 }, { title: 'list2', id: 6 },]
+const Board = observer(() => {
+    const { boards } = useContext(Context);
+    const { id } = useParams();
 
+    useEffect(() => {
+        boardApi.getBoard(id).then(data => boards.setBoard(data));
+    }, [id])
+    console.log(boards.current)
     return (
         <div className='Board'>
             <Sidebar />
             <div className="Board__inner">
                 <div className="Board__lists">
-                    {lists.map(list => <List title={list.title} key={list.id} />)}
+                    {boards.current?.lists?.map(list => <List title={list.title} key={list.id} cards={list.cards} />)}
 
                 </div>
             </div>
         </div>
     )
-}
+})
 
 export default Board

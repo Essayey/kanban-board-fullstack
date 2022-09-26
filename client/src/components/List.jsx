@@ -9,8 +9,7 @@ import Button from './UI/Button/Button'
 import { useHide } from '../hooks'
 import { submitOnEnter } from '../utils';
 
-const List = ({ title }) => {
-    const cards = ['card1', 'card2', 'card3', 'card4'];
+const List = ({ title, cards }) => {
 
     // Edit title
     const [titleEditing, setTitleEditing] = useState(false);
@@ -29,6 +28,7 @@ const List = ({ title }) => {
     }
 
     // Add card
+    const cardListRef = useRef();
     const [cardAdding, setCardAdding] = useState(false);
     const [cardName, setCardName] = useState('');
     const formRef = useRef();
@@ -45,46 +45,51 @@ const List = ({ title }) => {
         closeAddform();
     }
 
+    const handleAddCard = () => {
+        setCardAdding(true);
+        setTimeout(() => {
+            cardListRef.current.scrollTop = cardListRef.current.scrollHeight
+        })
+    }
+
     return (
         <div className="List">
-            <div className="List__inner">
-                {titleEditing
-                    ? <form ref={inputRef} onSubmit={e => editTitle(e)}>
-                        <Input
-                            value={listTitle}
-                            onChange={e => setListTitle(e.target.value)}
+            {titleEditing
+                ? <form ref={inputRef} onSubmit={e => editTitle(e)}>
+                    <Input
+                        value={listTitle}
+                        onChange={e => setListTitle(e.target.value)}
+                        autoFocus
+                        style={{ height: 24 }}
+                    />
+                </form>
+                : <h3 onClick={() => setTitleEditing(true)}>{title}</h3>
+            }
+
+            <div className="List__cards" ref={cardListRef}>
+                {cards.map(card => <Card title={card.title} key={card.id} />)}
+                {cardAdding &&
+                    <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
+                        <Textarea
+                            style={{ marginTop: 0 }}
                             autoFocus
-                            style={{ height: 24 }}
+                            onKeyPress={e => submitOnEnter(e, formRef)}
+                            value={cardName}
+                            onChange={e => setCardName(e.target.value)}
                         />
+                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                            <Button style={{ padding: 7, marginTop: 7 }} type='submit'>Add card</Button>
+                            <Button onClick={closeAddform} style={{ padding: 7, marginTop: 10 }}>Закрыть</Button>
+                        </div>
+
                     </form>
-                    : <h3 onClick={() => setTitleEditing(true)}>{title}</h3>
-                }
-
-                <div className="List__cards">
-                    {cards.map(card => <Card title={card} key={card} />)}
-                    {cardAdding &&
-                        <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
-                            <Textarea
-                                style={{ marginTop: 0 }}
-                                autoFocus
-                                onKeyPress={e => submitOnEnter(e, formRef)}
-                                value={cardName}
-                                onChange={e => setCardName(e.target.value)}
-                            />
-                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                                <Button style={{ padding: 7, marginTop: 7 }} type='submit'>Add card</Button>
-                                <Button onClick={closeAddform} style={{ padding: 7, marginTop: 10 }}>Закрыть</Button>
-                            </div>
-
-                        </form>
-                    }
-                </div>
-                {cardAdding ||
-                    <button className="List__add" onClick={() => setCardAdding(true)}>
-                        Add card +
-                    </button>
                 }
             </div>
+            {cardAdding ||
+                <button className="List__add" onClick={handleAddCard}>
+                    Add card +
+                </button>
+            }
         </div>
     )
 }

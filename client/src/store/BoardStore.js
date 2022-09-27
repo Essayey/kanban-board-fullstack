@@ -30,5 +30,7 @@ export default class BoardStore {
             return list;
         })
     }
-
+    addList(title) {
+        this._board.lists = [...this._board.lists, { title, cards: [] }]
+    }
 }

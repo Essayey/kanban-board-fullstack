@@ -34,6 +34,8 @@ const Board = observer(() => {
     const addList = e => {
         e.preventDefault();
         listApi.create(id, listTitle).then(data => boards.setBoard(data));
+        // Add list before getting response
+        boards.addList(listTitle);
         closeForm();
     }
 

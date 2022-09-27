@@ -1,10 +1,10 @@
 import React from 'react'
 import '../Styles/Card.css'
 
-const Card = ({ title }) => {
+const Card = ({ title, id }) => {
     return (
         <div className='Card'>
-            {title}
+            {title + '     id:' + id}
         </div>
     )
 }

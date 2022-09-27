@@ -11,7 +11,7 @@ import { submitOnEnter } from '../utils';
 import { cardApi } from '../http/cardAPI';
 import { Context } from '..';
 
-const List = ({ title, cards, id }) => {
+const List = React.memo(({ title, cards, id }) => {
     const { boards } = useContext(Context)
     // Edit title
     const [titleEditing, setTitleEditing] = useState(false);
@@ -101,6 +101,6 @@ const List = ({ title, cards, id }) => {
             }
         </div>
     )
-}
+})
 
 export default List

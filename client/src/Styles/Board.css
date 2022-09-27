@@ -4,7 +4,6 @@
 
 .Board__inner {
     min-width: calc(100vw - 250px);
-    background: #ffaa0021;
     padding: 10px;
 
     width: fit-content;
@@ -19,7 +18,6 @@
 .Board__addList {
     min-width: 300px;
     height: fit-content;
-    background: #00000022;
     border-radius: 4px;
     padding: 10px;
 

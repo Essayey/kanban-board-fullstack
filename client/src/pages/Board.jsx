@@ -17,9 +17,16 @@ const Board = observer(() => {
     const { boards } = useContext(Context);
     const { id } = useParams();
 
+    const body = document.querySelector('body');
     useEffect(() => {
-        boardApi.getBoard(id).then(data => boards.setBoard(data));
+        boardApi.getBoard(id).then(data => boards.setBoard(data))
+            .finally(() => body.style.background = boards.current.background);
     }, [id])
+    useEffect(() => {
+        return () => {
+            body.style.background = '#f8f8f8'
+        }
+    }, [])
 
     // Add list
     const addListRef = useRef();

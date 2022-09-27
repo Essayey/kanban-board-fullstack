@@ -20,4 +20,15 @@ export default class BoardStore {
     get current() {
         return this._board;
     }
+
+    // Change store before getting response
+    addCard(title, listId) {
+        this._board.lists = this._board.lists.map(list => {
+            if (list.id == listId) {
+                return { ...list, cards: [...list.cards, { title }] };
+            }
+            return list;
+        })
+    }
+
 }

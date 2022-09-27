@@ -45,6 +45,9 @@ const List = ({ title, cards, id }) => {
         e.preventDefault();
         // Request //
         cardApi.create(id, cardName).then(board => boards.setBoard(board));
+        // Add card before getting response
+        boards.addCard(cardName, id);
+
         closeAddform();
     }
 
@@ -73,7 +76,7 @@ const List = ({ title, cards, id }) => {
             }
 
             <div className="List__cards" ref={cardListRef}>
-                {cards.map(card => <Card title={card.title} key={card.id} />)}
+                {cards.map(card => <Card title={card.title} key={card.id} id={card.id} />)}
                 {cardAdding &&
                     <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
                         <Textarea

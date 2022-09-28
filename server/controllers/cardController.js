@@ -58,7 +58,7 @@ class CardController {
         return res.json(card);
     }
     async delete(req, res, next) {
-        const { id } = req.body
+        const { id } = req.params
         const card = await Card.findOne({ where: { id } });
         if (!card) {
             return next(ApiError.badRequest('Карточки не существует'));

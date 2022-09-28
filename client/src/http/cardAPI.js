@@ -9,6 +9,18 @@ class CardApi {
         const data = $authHost.get('/api/card/' + id).then(res => res.data);
         return data;
     }
+    updateTitle = async (id, value) => {
+        const data = $authHost.put('api/card/title', { id, value }).then(res => res.data);
+        return data;
+    }
+    updateDescription = async (id, value) => {
+        const data = $authHost.put('api/card/description', { id, value }).then(res => res.data);
+        return data;
+    }
+    delete = async (id) => {
+        const data = $authHost.delete('api/card/' + id);
+        return data;
+    }
 }
 export const cardApi = new CardApi()
 

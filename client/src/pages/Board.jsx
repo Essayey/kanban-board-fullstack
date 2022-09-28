@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 import List from '../components/List'
 import { useEffect } from 'react'
 import { boardApi } from '../http/boardAPI'
-import { Outlet, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useParams } from 'react-router-dom'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
 import Input from '../components/UI/Input/Input'
@@ -16,12 +16,13 @@ import { listApi } from '../http/listAPI'
 const Board = observer(() => {
     const { boards } = useContext(Context);
     const { id } = useParams();
+    const location = useLocation();
 
     const body = document.querySelector('body');
     useEffect(() => {
         boardApi.getBoard(id).then(data => boards.setBoard(data))
             .finally(() => body.style.background = boards.current.background);
-    }, [id])
+    }, [id, location])
 
     useEffect(() => {
         return () => {

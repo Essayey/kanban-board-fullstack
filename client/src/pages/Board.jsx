@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 import List from '../components/List'
 import { useEffect } from 'react'
 import { boardApi } from '../http/boardAPI'
-import { useParams } from 'react-router-dom'
+import { Outlet, useParams } from 'react-router-dom'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
 import Input from '../components/UI/Input/Input'
@@ -22,6 +22,7 @@ const Board = observer(() => {
         boardApi.getBoard(id).then(data => boards.setBoard(data))
             .finally(() => body.style.background = boards.current.background);
     }, [id])
+
     useEffect(() => {
         return () => {
             body.style.background = '#f8f8f8'
@@ -79,6 +80,7 @@ const Board = observer(() => {
                     </div>
                 </div>
             </div>
+            <Outlet />
         </div>
     )
 })

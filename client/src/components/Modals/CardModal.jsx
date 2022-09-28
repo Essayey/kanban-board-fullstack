@@ -14,7 +14,12 @@ const CardModal = (props) => {
     const [card, setCard] = useState({});
     const { cardId } = useParams();
     useEffect(() => {
-        cardApi.get(cardId).then(data => setCard(data));
+        cardApi.get(cardId).then(data => {
+            setCard(data)
+            setTitle(data.title);
+            setDescription(data.description);
+        });
+
     }, [])
 
     const navigate = useNavigate();
@@ -28,9 +33,14 @@ const CardModal = (props) => {
         setTitle(card.title);
     }
     useHide(closeTitleForm, titleFormRef);
+
     const changeTitle = e => {
         e.preventDefault()
+        if (title === '') return;
         setIsTitleEditing(false);
+        cardApi.updateTitle(cardId, title).then(card => setCard(card));
+        // While waiting response, set value on client
+        setCard({ ...card, title: title })
     }
 
     // Edit description
@@ -41,11 +51,21 @@ const CardModal = (props) => {
         setIsDescriptionEditing(false);
         setDescription(card.description);
     }
+
     useHide(closeDescriptionForm, descFormRef);
+
     const changeDescription = e => {
         e.preventDefault();
         setIsDescriptionEditing(false);
-        //
+        cardApi.updateDescription(cardId, description).then(card => setCard(card));
+        // While waiting response, set value on client
+        setCard({ ...card, title: title })
+    }
+
+    // Delete card
+    const deleteCard = id => {
+        console.log(id);
+        cardApi.delete(id).then(data => navigate('..'));
     }
 
     const shouldHide = !isTitleEditing && !isDescriptionEditing;
@@ -83,15 +103,18 @@ const CardModal = (props) => {
                             <CloseButton onClick={() => setIsDescriptionEditing(false)} />
                         </div>
                     </form>
-                    : <span style={{ cursor: 'pointer' }} onClick={() => setIsDescriptionEditing(true)}>
+                    :
+                    <pre style={{ cursor: 'pointer' }} onClick={() => setIsDescriptionEditing(true)}>
                         {card.description
                             ? card.description
                             : 'Добавить описание...'
                         }
-                    </span>
+                    </pre>
                 }
+                <Button style={{ position: 'absolute', bottom: 5, left: 5 }} onClick={() => deleteCard(cardId)}>
+                    Удалить карточку
+                </Button>
             </div>
-
         </Modal >
     )
 }

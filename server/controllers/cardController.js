@@ -35,7 +35,7 @@ class CardController {
     }
     async updateTitle(req, res, next) {
         const { id, value } = req.body
-        const card = await Card.findOne({ where: { id } });
+        const card = await Card.findOne({ where: { id }, include: [{ model: List, attributes: ['title'] }] })
         if (!card) {
             return next(ApiError.badRequest('Карточки не существует'));
         }
@@ -47,7 +47,7 @@ class CardController {
     }
     async updateDescription(req, res) {
         const { id, value } = req.body
-        const card = await Card.findOne({ where: { id } });
+        const card = await Card.findOne({ where: { id }, include: [{ model: List, attributes: ['title'] }] })
         if (!card) {
             return next(ApiError.badRequest('Карточки не существует'));
         }

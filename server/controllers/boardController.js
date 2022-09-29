@@ -10,7 +10,7 @@ class BoardController {
         const { name, background } = req.body;
         const board = await Board.create({ name, background: background || '#55f246' });
         const userBoard = await UserBoard.create({ userId: req.user.id, boardId: board.id })
-        return res.json({ board, userBoard });
+        return res.json(board);
     }
     async getAll(req, res) {
         const userBoards = await UserBoard.findAll({ where: { userId: req.user.id }, attributes: ['boardId'] });

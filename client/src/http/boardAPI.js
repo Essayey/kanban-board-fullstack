@@ -5,9 +5,12 @@ class BoardApi {
         const { data } = await $authHost.get('api/board');
         return data;
     }
-
     getBoard = async id => {
         const { data } = await $authHost.get('api/board/' + id);
+        return data;
+    }
+    create = async (name, background) => {
+        const { data } = await $authHost.post('api/board', { name, background });
         return data;
     }
 

@@ -5,9 +5,11 @@ import { boardApi } from '../http/boardAPI'
 import '../Styles/Boards.css'
 import { contrastColor } from 'contrast-color'
 import { cc } from '../utils/contrastColor'
+import CreateBoardModal from '../components/Modals/CreateBoardModal'
 
 const Boards = () => {
     const [boards, setBoards] = useState([]);
+    const [boardModal, setBoardModal] = useState(false);
 
     const createBoard = () => { }
 
@@ -29,7 +31,8 @@ const Boards = () => {
                             name={board.name}
                         />
                     )}
-                    <div onClick={() => createBoard()} className="BoardItem BoardItem-new">Новая доска</div>
+                    <div onClick={() => setBoardModal(true)} className="BoardItem BoardItem-new">Новая доска</div>
+                    {boardModal && <CreateBoardModal onHide={() => setBoardModal(false)} />}
                 </div>
             </div>
         </div>

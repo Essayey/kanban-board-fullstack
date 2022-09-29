@@ -6,7 +6,6 @@ import Textarea from '../UI/Textarea/Textarea'
 import { useHide } from '../../hooks'
 import { submitOnEnter } from '../../utils'
 import { useNavigate, useParams } from 'react-router-dom'
-import { BOARD_ROUTE } from '../../utils/consts'
 import { cardApi } from '../../http/cardAPI'
 import { useEffect } from 'react'
 
@@ -65,7 +64,7 @@ const CardModal = (props) => {
     // Delete card
     const deleteCard = id => {
         console.log(id);
-        cardApi.delete(id).then(data => navigate('..'));
+        cardApi.delete(id).then(() => navigate('..'));
     }
 
     const shouldHide = !isTitleEditing && !isDescriptionEditing;
@@ -86,7 +85,7 @@ const CardModal = (props) => {
             }
 
             <span style={{ fontSize: 12 }}>
-                в списке {card.listTitle}
+                в списке {card.list?.title}
             </span>
             <h3>Описание</h3>
             <div>

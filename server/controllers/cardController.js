@@ -25,7 +25,7 @@ class CardController {
     }
     async getOne(req, res, next) {
         const { id } = req.params
-        const card = await Card.findOne({ where: { id } })
+        const card = await Card.findOne({ where: { id }, include: [{ model: List, attributes: ['title'] }] })
 
         if (!card) {
             return next(ApiError.badRequest('Карточки не существует'));

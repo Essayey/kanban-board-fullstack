@@ -8,6 +8,7 @@
 .Navbar__inner {
     height: 100%;
     padding: 5px;
+    padding-right: 25px;
     display: flex;
     justify-content: space-between;
     align-items: center;

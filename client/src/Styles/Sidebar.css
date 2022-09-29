@@ -10,6 +10,8 @@
     display: flex;
     flex-direction: column;
     border-bottom: 1px solid #00000021;
+    max-height: 80%;
+    overflow: auto;
 }
 
 .Sidebar__link {

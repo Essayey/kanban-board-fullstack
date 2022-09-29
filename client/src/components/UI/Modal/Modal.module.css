@@ -9,6 +9,7 @@
     justify-content: center;
     align-items: center;
     background: #00000099;
+    overflow-wrap: break-word;
 }
 
 .Modal__window {

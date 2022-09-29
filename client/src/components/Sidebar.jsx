@@ -1,11 +1,16 @@
-import React, { useEffect, useState } from 'react'
+import React, { useContext, useEffect, useState } from 'react'
 import '../Styles/Sidebar.css'
 import { useNavigate, useParams } from 'react-router-dom'
 import { BOARDS_ROUTE } from '../utils/consts'
 import { boardApi } from '../http/boardAPI'
+import { cc } from '../utils/contrastColor'
+import { Context } from '..'
+
 
 const Sidebar = () => {
     const [boards, setBoards] = useState([]);
+    const { boards: boardsContext } = useContext(Context)
+    const bg = boardsContext.current.background;
     const { id } = useParams();
 
     const navigate = useNavigate();
@@ -14,9 +19,8 @@ const Sidebar = () => {
         boardApi.getAll().then(data => setBoards(data.boards));
     }, [])
 
-
     return (
-        <div className="Sidebar">
+        <div className="Sidebar" style={{ color: cc.contrastColor({ bgColor: bg }) }}>
             <h2 style={{ paddingLeft: 5 }}>Мои доски</h2>
             <div className="Sidebar__list">
                 {boards.map(board =>

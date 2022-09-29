@@ -4,6 +4,7 @@ import BoardItem from '../components/BoardItem'
 import { boardApi } from '../http/boardAPI'
 import '../Styles/Boards.css'
 import { contrastColor } from 'contrast-color'
+import { cc } from '../utils/contrastColor'
 
 const Boards = () => {
     const [boards, setBoards] = useState([]);
@@ -24,7 +25,7 @@ const Boards = () => {
                             key={board.id}
                             id={board.id}
                             background={board.background}
-                            color={contrastColor({ bgColor: board.background })}
+                            color={cc.contrastColor({ bgColor: board.background })}
                             name={board.name}
                         />
                     )}

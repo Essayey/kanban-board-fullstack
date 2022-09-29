@@ -10,6 +10,7 @@ import { useHide } from '../hooks'
 import { submitOnEnter } from '../utils';
 import { cardApi } from '../http/cardAPI';
 import { Context } from '..';
+import { listApi } from '../http/listAPI';
 
 const List = React.memo(({ title, cards, id }) => {
     const { boards } = useContext(Context)
@@ -25,8 +26,10 @@ const List = React.memo(({ title, cards, id }) => {
 
     const editTitle = e => {
         e.preventDefault();
+        if (listTitle === '') return;
         // Request //
-        closeTitleEditing();
+        listApi.update(id, listTitle).then(data => boards.setBoard(data));
+        setTitleEditing(false);
     }
 
     // Add card
@@ -60,20 +63,24 @@ const List = React.memo(({ title, cards, id }) => {
 
     return (
         <div className="List">
-            {titleEditing
-                ? <form
-                    style={{}}
-                    ref={inputRef}
-                    onSubmit={e => editTitle(e)}>
-                    <Input
-                        value={listTitle}
-                        onChange={e => setListTitle(e.target.value)}
-                        autoFocus
-                        style={{ height: 24, fontWeight: 700, fontSize: 18, margin: 0, padding: 0 }}
-                    />
-                </form>
-                : <h3 onClick={() => setTitleEditing(true)}>{title}</h3>
-            }
+            <div style={{ height: 30 }}>
+                {titleEditing
+                    ? <form
+                        style={{}}
+                        ref={inputRef}
+                        onSubmit={e => editTitle(e)}
+                    >
+                        <Input
+                            value={listTitle}
+                            onChange={e => setListTitle(e.target.value)}
+                            autoFocus
+                            style={{ fontWeight: '700', fontSize: 18, margin: 0, padding: 0, marginLeft: -1, textAlign: 'left', height: 24 }}
+                        />
+                    </form>
+                    : <h3 style={{ height: '100%', fontSize: 18 }} onClick={() => setTitleEditing(true)}>{title}</h3>
+                }
+            </div>
+
 
             <div className="List__cards" ref={cardListRef}>
                 {cards.map(card => <Card title={card.title} key={card.id} id={card.id} />)}

@@ -25,7 +25,7 @@ class ListController {
         list.set({ title: value });
         await list.save();
 
-        return res.json(list);
+        return res.json(await getBoard(list.boardId));
     }
     async delete(req, res, next) {
         const { id } = req.body;

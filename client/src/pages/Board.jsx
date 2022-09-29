@@ -12,6 +12,7 @@ import Button from '../components/UI/Button/Button'
 import CloseButton from '../components/UI/CloseButton/CloseButton'
 import { useHide } from '../hooks'
 import { listApi } from '../http/listAPI'
+import { cc } from '../utils/contrastColor'
 
 const Board = observer(() => {
     const { boards } = useContext(Context);
@@ -59,7 +60,12 @@ const Board = observer(() => {
                         <List title={list.title} key={list.id} cards={list.cards} id={list.id} />
                     )}
 
-                    <div ref={addListRef} className="Board__addList" style={isListAdding ? {} : { cursor: 'pointer' }} onClick={!isListAdding ? () => setIsListAdding(true) : null}>
+                    <div
+                        ref={addListRef}
+                        className="Board__addList"
+                        style={isListAdding ? {} : { cursor: 'pointer' }}
+                        onClick={!isListAdding ? () => setIsListAdding(true) : null}
+                    >
                         {isListAdding
                             ?
                             <form onSubmit={e => addList(e)}>
@@ -76,7 +82,7 @@ const Board = observer(() => {
                                 </div>
 
                             </form>
-                            : 'Добавить список'
+                            : <div style={{ color: cc.contrastColor({ bgColor: boards.current.background }) }}>Добавить список</div>
                         }
                     </div>
                 </div>

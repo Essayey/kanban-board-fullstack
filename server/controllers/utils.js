@@ -7,7 +7,6 @@ const getBoard = async (id) => {
             where: { boardId: id },
             required: false,
             include: [{
-                order: [['order', 'DESC']],
                 model: Card,
                 where: {
                     listId: await List.findAll(

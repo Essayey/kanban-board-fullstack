@@ -28,7 +28,7 @@ class ListController {
         return res.json(await getBoard(list.boardId));
     }
     async delete(req, res, next) {
-        const { id } = req.body;
+        const { id } = req.params;
         const list = await List.findOne({ where: { id } });
         if (!list) {
             return next(ApiError.badRequest('Списка не существует'));
@@ -39,7 +39,7 @@ class ListController {
             where: { order: { [Op.gt]: list.order }, boardId: list.boardId }
         }).then(lists => lists.map(list => list.decrement('order')));
 
-        return res.json('Успешно')
+        return res.json(await getBoard(list.boardId));
     }
 }
 

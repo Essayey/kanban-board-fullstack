@@ -9,5 +9,9 @@ class ListApi {
         const data = $authHost.put('/api/list', { id, value }).then(res => res.data);
         return data;
     }
+    delete = async (id) => {
+        const data = $authHost.delete('api/list/' + id).then(res => res.data);
+        return data;
+    }
 }
 export const listApi = new ListApi()

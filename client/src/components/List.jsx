@@ -11,6 +11,8 @@ import { submitOnEnter } from '../utils';
 import { cardApi } from '../http/cardAPI';
 import { Context } from '..';
 import { listApi } from '../http/listAPI';
+import CloseButton from './UI/CloseButton/CloseButton';
+import Modal from './UI/Modal/Modal';
 
 const List = React.memo(({ title, cards, id }) => {
     const { boards } = useContext(Context)
@@ -61,8 +63,20 @@ const List = React.memo(({ title, cards, id }) => {
         })
     }
 
+    // Delete list
+    const [isListDeleting, setIsListDeleting] = useState(false);
+
+    const deleteList = () => {
+        listApi.delete(id).then(data => boards.setBoard(data))
+        setIsListDeleting(false);
+    }
+
     return (
         <div className="List">
+            <CloseButton
+                style={{ position: 'absolute', top: 5, right: 5 }}
+                onClick={() => setIsListDeleting(true)}
+            />
             <div style={{ height: 30 }}>
                 {titleEditing
                     ? <form
@@ -106,6 +120,16 @@ const List = React.memo(({ title, cards, id }) => {
                     Add card +
                 </button>
             }
+            {isListDeleting &&
+                <Modal height='130px' width='280px' onHide={() => setIsListDeleting(false)} shouldHide={true}>
+                    Вы уверены, что хотите удалить список?
+                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
+                        <Button onClick={() => setIsListDeleting(false)}>Отмена</Button>
+                        <Button onClick={deleteList}>Удалить</Button>
+                    </div>
+                </Modal>
+            }
+
         </div>
     )
 })

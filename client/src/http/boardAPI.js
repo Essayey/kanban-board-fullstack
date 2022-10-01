@@ -13,7 +13,17 @@ class BoardApi {
         const { data } = await $authHost.post('api/board', { name, background });
         return data;
     }
-
+    updateName = async (id, value) => {
+        const { data } = await $authHost.put('api/board/name', { id, value });
+        return data;
+    }
+    updateBackground = async (id, value) => {
+        const { data } = await $authHost.put('api/board/background', { id, value });
+        return data;
+    }
+    delete = async (id) => {
+        await $authHost.delete('api/board/' + id);
+    }
 }
 
 export const boardApi = new BoardApi()

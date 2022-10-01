@@ -7,7 +7,7 @@ import { cc } from '../utils/contrastColor'
 import { Context } from '..'
 
 
-const Sidebar = () => {
+const Sidebar = ({ updated }) => {
     const [boards, setBoards] = useState([]);
     const { boards: boardsContext } = useContext(Context)
     const bg = boardsContext.current.background;
@@ -17,7 +17,7 @@ const Sidebar = () => {
 
     useEffect(() => {
         boardApi.getAll().then(data => setBoards(data.boards));
-    }, [])
+    }, [updated])
 
     return (
         <div className="Sidebar" style={{ color: cc.contrastColor({ bgColor: bg }) }}>

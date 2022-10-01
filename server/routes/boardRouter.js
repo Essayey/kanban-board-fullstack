@@ -8,6 +8,6 @@ router.get('/', authMiddleware, boardController.getAll) // Get all boards, belon
 router.get('/:id', authMiddleware, boardController.getOne) // Get one board by id
 router.put('/background', authMiddleware, boardController.updateBackground) // Update background
 router.put('/name', authMiddleware, boardController.updateName) // Update name
-router.delete('/', authMiddleware, boardController.delete) // Delete board by id
+router.delete('/:id', authMiddleware, boardController.delete) // Delete board by id
 
 module.exports = router

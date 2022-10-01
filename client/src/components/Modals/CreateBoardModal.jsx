@@ -6,7 +6,7 @@ import { CirclePicker } from 'react-color';
 import { submitOnEnter } from '../../utils';
 import { boardApi } from '../../http/boardAPI';
 import { useNavigate } from 'react-router-dom';
-import { BOARDS_ROUTE } from '../../utils/consts';
+import { BOARDS_ROUTE, colors } from '../../utils/consts';
 
 const CreateBoardModal = (props) => {
     const navigate = useNavigate();
@@ -23,9 +23,6 @@ const CreateBoardModal = (props) => {
 
     const shouldHide = true; //
 
-    const colors = ["#f44336", "#e91e63", "#9c27b0", "#673ab7", "#3f51b5", "#2196f3", "#03a9f4", "#00bcd4",
-        "#009688", "#4caf50", "#8bc34a", "#cddc39", "#ffeb3b", "#ffc107", "#ff9800", "#ff5722",
-        "#795548", "#607d8b", "#595854", "#ffcc00", "#ff2bca", "#fcfcfc"]
 
     return (
         <Modal {...props} shouldHide={shouldHide} height={'300px'}>

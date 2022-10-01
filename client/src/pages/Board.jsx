@@ -13,6 +13,7 @@ import CloseButton from '../components/UI/CloseButton/CloseButton'
 import { useHide } from '../hooks'
 import { listApi } from '../http/listAPI'
 import { cc } from '../utils/contrastColor'
+import BoardMenu from '../components/BoardMenu'
 
 const Board = observer(() => {
     const { boards } = useContext(Context);
@@ -23,7 +24,7 @@ const Board = observer(() => {
     useEffect(() => {
         boardApi.getBoard(id).then(data => boards.setBoard(data))
             .finally(() => body.style.background = boards.current.background);
-    }, [id, location])
+    }, [id, location, boards.current.background])
 
     useEffect(() => {
         return () => {
@@ -51,42 +52,50 @@ const Board = observer(() => {
 
     useHide(closeForm, addListRef)
 
+    // update sidebar
     return (
         <div className='Board'>
-            <Sidebar />
-            <div className="Board__inner">
-                <div className="Board__lists">
-                    {boards.current?.lists?.map(list =>
-                        <List title={list.title} key={list.id} cards={list.cards} id={list.id} />
-                    )}
+            <Sidebar updated={boards.current.name} />
+            <div className='Board__wrapper'>
+                <BoardMenu
+                    name={boards.current.name}
+                    contrastColor={cc.contrastColor({ bgColor: boards.current.background })}
+                />
+                <div className="Board__inner">
+                    <div className="Board__lists">
+                        {boards.current?.lists?.map(list =>
+                            <List title={list.title} key={list.id} cards={list.cards} id={list.id} />
+                        )}
 
-                    <div
-                        ref={addListRef}
-                        className="Board__addList"
-                        style={isListAdding ? {} : { cursor: 'pointer' }}
-                        onClick={!isListAdding ? () => setIsListAdding(true) : null}
-                    >
-                        {isListAdding
-                            ?
-                            <form onSubmit={e => addList(e)}>
-                                <Input
-                                    value={listTitle}
-                                    onChange={e => setListTitle(e.target.value)}
-                                    autoFocus
-                                    placeholder={'Введите название списка'}
-                                    style={{ width: '100%' }}
-                                />
-                                <div className='Board__addList-btns'>
-                                    <Button>Добавить</Button>
-                                    <CloseButton type="button" onClick={closeForm} />
-                                </div>
+                        <div
+                            ref={addListRef}
+                            className="Board__addList"
+                            style={isListAdding ? {} : { cursor: 'pointer' }}
+                            onClick={!isListAdding ? () => setIsListAdding(true) : null}
+                        >
+                            {isListAdding
+                                ?
+                                <form onSubmit={e => addList(e)}>
+                                    <Input
+                                        value={listTitle}
+                                        onChange={e => setListTitle(e.target.value)}
+                                        autoFocus
+                                        placeholder={'Введите название списка'}
+                                        style={{ width: '100%' }}
+                                    />
+                                    <div className='Board__addList-btns'>
+                                        <Button>Добавить</Button>
+                                        <CloseButton type="button" onClick={closeForm} />
+                                    </div>
 
-                            </form>
-                            : <div style={{ color: cc.contrastColor({ bgColor: boards.current.background }) }}>Добавить список</div>
-                        }
+                                </form>
+                                : <div style={{ color: cc.contrastColor({ bgColor: boards.current.background }) }}>Добавить список</div>
+                            }
+                        </div>
                     </div>
                 </div>
             </div>
+
             <Outlet />
         </div>
     )

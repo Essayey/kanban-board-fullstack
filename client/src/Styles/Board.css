@@ -2,10 +2,16 @@
     display: flex;
 }
 
-.Board__inner {
+.Board__wrapper {
+    display: flex;
+    flex-direction: column;
     min-width: calc(100vw - 250px);
-    padding: 10px;
+}
 
+.Board__inner {
+    max-width: calc(100vw - 250px);
+    padding: 10px;
+    height: 100%;
     width: fit-content;
     overflow-x: auto;
 }
@@ -31,4 +37,22 @@
     justify-content: space-between;
     align-items: center;
     margin-top: 10px;
+}
+
+.BoardMenu {
+    height: 50px;
+    background: #00000021;
+    flex-shrink: 0;
+    padding: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+}
+
+.BoardMenu__main {
+    display: flex;
+    align-items: center;
+    gap: 15px;
 }

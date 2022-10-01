@@ -125,7 +125,7 @@ const List = React.memo(({ title, cards, id }) => {
                     Вы уверены, что хотите удалить список?
                     <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
                         <Button onClick={() => setIsListDeleting(false)}>Отмена</Button>
-                        <Button onClick={deleteList}>Удалить</Button>
+                        <Button variant='danger' onClick={deleteList}>Удалить</Button>
                     </div>
                 </Modal>
             }

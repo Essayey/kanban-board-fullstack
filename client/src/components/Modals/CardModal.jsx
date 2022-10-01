@@ -110,7 +110,7 @@ const CardModal = (props) => {
                         }
                     </pre>
                 }
-                <Button style={{ position: 'absolute', bottom: 5, left: 5 }} onClick={() => deleteCard(cardId)}>
+                <Button variant='danger' style={{ position: 'absolute', bottom: 5, left: 5 }} onClick={() => deleteCard(cardId)}>
                     Удалить карточку
                 </Button>
             </div>

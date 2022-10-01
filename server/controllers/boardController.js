@@ -15,7 +15,7 @@ class BoardController {
     async getAll(req, res) {
         const userBoards = await UserBoard.findAll({ where: { userId: req.user.id }, attributes: ['boardId'] });
         const boardIds = userBoards.map(i => i.boardId);
-        const boards = await Board.findAll({ where: { id: boardIds } })
+        const boards = await Board.findAll({ where: { id: boardIds }, order: [['updatedAt', 'DESC']] })
         return res.json({ boards });
     }
     async getOne(req, res, next) {
@@ -50,7 +50,7 @@ class BoardController {
         board.set({ background: value });
         await board.save();
 
-        return res.json(board);
+        return res.json(await getBoard(id));
     }
 
     async updateName(req, res, next) {
@@ -66,13 +66,13 @@ class BoardController {
         board.set({ name: value });
         await board.save();
 
-        return res.json(board);
+        return res.json(await getBoard(id));
     }
 
     // TODO: Add owner role, who can delete board
     // Add invite to the board functionality
     async delete(req, res, next) {
-        const { id } = req.body;
+        const { id } = req.params;
 
         const board = await Board.findOne({ where: { id } });
         if (!board) {

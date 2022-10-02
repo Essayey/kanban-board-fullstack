@@ -13,8 +13,9 @@ import { Context } from '..';
 import { listApi } from '../http/listAPI';
 import CloseButton from './UI/CloseButton/CloseButton';
 import Modal from './UI/Modal/Modal';
+import { observer } from 'mobx-react-lite';
 
-const List = React.memo(({ title, cards, id }) => {
+const List = observer(({ title, cards, id, index }) => {
     const { boards } = useContext(Context)
     // Edit title
     const [titleEditing, setTitleEditing] = useState(false);
@@ -71,8 +72,21 @@ const List = React.memo(({ title, cards, id }) => {
         setIsListDeleting(false);
     }
 
+    // Drag and drop Card
+
+    const { dnd } = useContext(Context);
+    const handleCardDragEnter = e => {
+        e.preventDefault();
+        dnd.setDest({ listId: id, cardIndex: 0, listIndex: index })
+        boards.moveCard(dnd.src, dnd.dest)
+        dnd.setSrc({ ...dnd.src, cardIndex: 0, listIndex: index })
+    }
+
     return (
-        <div className="List">
+        <div
+            className="List"
+            onDragEnter={dnd.dragging && cards.length === 0 ? e => handleCardDragEnter(e) : null}
+        >
             <CloseButton
                 style={{ position: 'absolute', top: 5, right: 5 }}
                 onClick={() => setIsListDeleting(true)}
@@ -97,7 +111,17 @@ const List = React.memo(({ title, cards, id }) => {
 
 
             <div className="List__cards" ref={cardListRef}>
-                {cards.map(card => <Card title={card.title} key={card.id} id={card.id} />)}
+                {cards.map((card, cardIndex) =>
+                    <Card
+                        title={card.title}
+                        key={card.id}
+                        id={card.id}
+                        listId={id}
+                        listIndex={index}
+                        index={cardIndex}
+                        order={card.order}
+                    />)
+                }
                 {cardAdding &&
                     <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
                         <Textarea

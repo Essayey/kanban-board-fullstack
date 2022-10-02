@@ -50,9 +50,8 @@ const Board = observer(() => {
         closeForm();
     }
 
-    useHide(closeForm, addListRef)
+    useHide(closeForm, addListRef);
 
-    // update sidebar
     return (
         <div className='Board'>
             <Sidebar updated={boards.current.name} />
@@ -63,8 +62,8 @@ const Board = observer(() => {
                 />
                 <div className="Board__inner">
                     <div className="Board__lists">
-                        {boards.current?.lists?.map(list =>
-                            <List title={list.title} key={list.id} cards={list.cards} id={list.id} />
+                        {boards.current?.lists?.map((list, index) =>
+                            <List title={list.title} key={list.id} cards={list.cards} id={list.id} index={index} />
                         )}
 
                         <div

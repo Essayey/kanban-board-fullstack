@@ -1,4 +1,5 @@
-import { makeAutoObservable } from "mobx";
+import { action, makeAutoObservable } from "mobx";
+
 
 export default class BoardStore {
     constructor() {
@@ -32,5 +33,13 @@ export default class BoardStore {
     }
     addList(title) {
         this._board.lists = [...this._board.lists, { title, cards: [] }]
+    }
+
+    // Dnd
+
+    moveCard(src, dest) {
+        const lists = JSON.parse(JSON.stringify(this._board.lists))
+        lists[dest.listIndex].cards.splice(dest.cardIndex, 0, lists[src.listIndex].cards.splice(src.cardIndex, 1)[0]);
+        this._board.lists = lists;
     }
 }

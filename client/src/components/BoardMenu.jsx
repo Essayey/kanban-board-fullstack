@@ -45,6 +45,11 @@ const BoardMenu = observer(({ contrastColor }) => {
     const changeColorTheme = () => {
         boardApi.updateBackground(boards.current.id, background.hex).then(board => boards.setBoard(board));
         setIsBgEditing(false);
+        setBackground(false);
+    }
+    const closeChangeBg = () => {
+        setIsBgEditing(false);
+        setBackground(false);
     }
     // Delete board
     const [isBoardDeleting, setIsBoardDeleting] = useState(false);
@@ -73,7 +78,7 @@ const BoardMenu = observer(({ contrastColor }) => {
                 }
                 <Button onClick={() => setIsBgEditing(true)} variant={'gray'}>Change color theme</Button>
                 {isBgEditing &&
-                    <Modal onHide={() => setIsBgEditing(false)} shouldHide={true} height='180px'>
+                    <Modal onHide={closeChangeBg} shouldHide={true} height='180px'>
                         <h3 style={{ marginBottom: 15, textAlign: 'center' }}>
                             Выберите тему
                         </h3>

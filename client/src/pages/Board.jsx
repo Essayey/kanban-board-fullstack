@@ -14,9 +14,10 @@ import { useHide } from '../hooks'
 import { listApi } from '../http/listAPI'
 import { cc } from '../utils/contrastColor'
 import BoardMenu from '../components/BoardMenu'
+import Dnd from '../components/UI/DnDElement/Dnd'
 
 const Board = observer(() => {
-    const { boards } = useContext(Context);
+    const { boards, dnd } = useContext(Context);
     const { id } = useParams();
     const location = useLocation();
 
@@ -95,6 +96,14 @@ const Board = observer(() => {
                 </div>
             </div>
 
+            {
+                dnd.dragging &&
+                <Dnd>
+                    <div className='Card'>
+                        DRAGGING
+                    </div>
+                </Dnd>
+            }
             <Outlet />
         </div>
     )

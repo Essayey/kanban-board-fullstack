@@ -5,7 +5,11 @@ export default class DndStore {
         this._src = null
         this._dest = null
         this._dragging = false
+        this._rect = null
+        this._shift = {}
+        this._node = null
         makeAutoObservable(this)
+
     }
 
     setSrc(src) {
@@ -20,6 +24,16 @@ export default class DndStore {
         this._dragging = bool;
     }
 
+    setRect(rect) {
+        this._rect = rect
+    }
+    setShift(shift) {
+        this._shift = shift
+    }
+    setNode(node) {
+        this._node = node
+    }
+
     get src() {
         return this._src;
     }
@@ -30,5 +44,16 @@ export default class DndStore {
 
     get dragging() {
         return this._dragging;
+    }
+
+    get rect() {
+        return this._rect
+    }
+
+    get shift() {
+        return this._shift
+    }
+    get node() {
+        return this._node
     }
 }

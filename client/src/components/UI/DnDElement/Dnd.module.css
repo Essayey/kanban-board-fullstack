@@ -1,0 +1,7 @@
+.Dnd {
+    position: absolute;
+    transform: rotate(5deg);
+    cursor: move;
+    pointer-events: none;
+    border-radius: 4px;
+}

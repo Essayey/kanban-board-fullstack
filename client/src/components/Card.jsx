@@ -6,6 +6,7 @@ import { cardApi } from '../http/cardAPI';
 import '../Styles/Card.css'
 
 
+
 const Card = observer(({ title, id, listId, index, listIndex, order }) => {
     const location = useLocation();
     const navigate = useNavigate();
@@ -14,6 +15,8 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
     // Drag and drop
     const { dnd, boards } = useContext(Context);
     const dragItemNode = useRef();
+
+    // Styles 
 
     const handleDragEnd = () => {
         dragItemNode.current.removeEventListener('dragend', handleDragEnd);
@@ -32,10 +35,24 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
         dragItemNode.current = e.target;
         dragItemNode.current.addEventListener('dragend', handleDragEnd);
 
+        const rect = e.target.getBoundingClientRect()
+        dnd.setRect(rect);
+        dnd.setShift({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        dnd.setNode(e.target.cloneNode(true))
+
+
         dnd.setSrc({ boardId: boards.current.id, cardId: id, listId, cardIndex: index, listIndex: listIndex });
         dnd.setDest({ cardId: id, listId, cardIndex: index, listIndex: listIndex })
+
+
+        e.target.style.opacity = '0';
+
+        setTimeout(() => {
+            e.target.style.opacity = '1';
+        }, 0);
+
+
         dnd.setDragging(true)
-        setTimeout(() => dnd.setDragging(true), 0);
     }
 
     const handleDragEnter = e => {
@@ -48,7 +65,7 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
     }
 
     const getStyle = () => {
-        if (dnd.src.cardIndex === index && dnd.src.listIndex === listIndex) return { color: 'transparent', background: '#00000011' };
+        if (dnd.src.cardIndex === index && dnd.src.listIndex === listIndex) return { color: 'transparent', background: '#fff' };
         return {}
     }
 
@@ -59,9 +76,11 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
             draggable={true}
             onDragStart={e => handleDragStart(e)}
             onDragEnter={dnd.dragging ? e => handleDragEnter(e) : null}
+            onDragOver={e => e.preventDefault()}
             style={dnd.dragging ? getStyle() : {}}
         >
-            {title + ' order: ' + order}
+            {title + ' order:' + order}
+
         </div>
     )
 })

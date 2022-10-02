@@ -82,6 +82,8 @@ const List = observer(({ title, cards, id, index }) => {
         dnd.setSrc({ ...dnd.src, cardIndex: 0, listIndex: index })
     }
 
+
+
     return (
         <div
             className="List"

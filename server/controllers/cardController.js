@@ -6,7 +6,7 @@ const getBoard = require("./utils");
 class CardController {
     async create(req, res, next) {
         const { listId, title } = req.body;
-        const card = await Card.create({ listId, title, order: await Card.count({ where: { listId } }) });
+        await Card.create({ listId, title, order: await Card.count({ where: { listId } }) });
 
         const list = await List.findOne({ where: { id: listId }, attributes: ['boardId'] });
 
@@ -57,6 +57,55 @@ class CardController {
 
         return res.json(card);
     }
+    async move(req, res, next) {
+        const { src, dest } = req.body;
+        if (dest.cardIndex === undefined) {
+            return next(ApiError.badRequest('Dest card index is undefined'))
+        }
+
+        const order = dest.cardIndex;
+
+        const srcCard = await Card.findOne({ where: { id: src.cardId } });
+        // Different lists
+        if (dest.listId !== src.listId) {
+            const srcCardOrder = srcCard.order;
+            await Card.findAll({
+                where: { order: { [Op.gte]: order }, listId: dest.listId }
+            }).then(cards => cards.map(card => card.increment('order')));
+
+            srcCard.set('listId', dest.listId);
+            srcCard.set('order', order);
+            await srcCard.save();
+
+            await Card.findAll({
+                where: { order: { [Op.gte]: srcCardOrder }, listId: src.listId }
+            }).then(cards => cards.map(card => card.decrement('order')));
+
+        }
+        // Same lists
+        else {
+            if (srcCard.order === order) {
+                return next(ApiError.badRequest('Src and Dest are the same'))
+            }
+
+            if (srcCard.order < order) {
+                await Card.findAll({
+                    where: { order: { [Op.between]: [srcCard.order, order] }, listId: dest.listId }
+                }).then(cards => cards.map(card => card.decrement('order')));
+                srcCard.set('order', order);
+            }
+            else {
+                await Card.findAll({
+                    where: { order: { [Op.between]: [order, srcCard.order] }, listId: dest.listId }
+                }).then(cards => cards.map(card => card.increment('order')));
+                srcCard.set('order', order);
+            }
+            await srcCard.save();
+        }
+
+        return res.json(await getBoard(src.boardId))
+    }
+
     async delete(req, res, next) {
         const { id } = req.params
         const card = await Card.findOne({ where: { id } });

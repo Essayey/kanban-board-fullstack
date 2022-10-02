@@ -17,6 +17,10 @@ class CardApi {
         const data = $authHost.put('api/card/description', { id, value }).then(res => res.data);
         return data;
     }
+    move = async (src, dest) => {
+        const data = $authHost.put('api/card/move', { src, dest }).then(res => res.data);
+        return data;
+    }
     delete = async (id) => {
         const data = $authHost.delete('api/card/' + id);
         return data;

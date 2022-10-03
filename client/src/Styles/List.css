@@ -1,5 +1,7 @@
 .List {
     min-width: 300px;
+    max-width: 300px;
+    flex-shrink: 0;
     height: fit-content;
     max-height: calc(100vh - 100px);
     background: #ffffffaa;

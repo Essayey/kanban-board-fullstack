@@ -30,7 +30,7 @@ const Dnd = () => {
         <div
             ref={ref}
             className={styles.Dnd}
-            style={{ top: dnd.rect.y, left: dnd.rect.left, width: dnd.rect.width, height: dnd.rect.height, background: '#fff', color: '#000' }}
+            style={{ top: dnd.rect.y, left: dnd.rect.left, width: dnd.rect.width, height: dnd.rect.height, background: '#f7f7f7' }}
         >
         </div>
     )

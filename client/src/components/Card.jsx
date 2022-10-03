@@ -16,8 +16,6 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
     const { dnd, boards } = useContext(Context);
     const dragItemNode = useRef();
 
-    // Styles 
-
     const handleDragEnd = () => {
         dragItemNode.current.removeEventListener('dragend', handleDragEnd);
         dragItemNode.current = null;
@@ -57,6 +55,7 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
 
     const handleDragEnter = e => {
         e.preventDefault();
+
         if (dnd.src.cardIndex !== index || dnd.src.listIndex !== listIndex) {
             dnd.setDest({ cardId: id, listId: listId, cardIndex: index, listIndex })
             boards.moveCard(dnd.src, dnd.dest)
@@ -65,13 +64,13 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
     }
 
     const getStyle = () => {
-        if (dnd.src.cardIndex === index && dnd.src.listIndex === listIndex) return { color: 'transparent', background: '#fff' };
+        if (dnd.src.cardIndex === index && dnd.src.listIndex === listIndex) return { color: 'transparent', background: '#ffffff33' };
         return {}
     }
 
     return (
         <div
-            className='Card'
+            className={dnd.dragging ? 'Card' : 'Card Card-hover'}
             onClick={() => navigate(location.pathname + '/' + id)}
             draggable={true}
             onDragStart={e => handleDragStart(e)}

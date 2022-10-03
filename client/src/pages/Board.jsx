@@ -83,12 +83,12 @@ const Board = observer(() => {
     }
 
     const handleDragStart = (e, index, id) => {
-        if (e.target.className !== 'List') return;
+        if (e.target.className !== 'List__wrapper') return;
 
         dragItemNode.current = e.target;
         initialSrcIndex.current = index;
 
-        const rect = e.target.getBoundingClientRect()
+        const rect = e.target.firstChild.getBoundingClientRect()
         dnd.setRect(rect);
         dnd.setShift({ x: e.clientX - rect.left, y: e.clientY - rect.top });
         dnd.setNode(e.target.cloneNode(true))
@@ -109,7 +109,7 @@ const Board = observer(() => {
     }
 
     const handleDragEnter = (e, index, id) => {
-        if (e.target.className !== 'List') return;
+        if (e.target.className !== 'List__wrapper' && e.target.className !== 'List') return;
         e.preventDefault();
 
         if (id !== src.current.id || index === initialSrcIndex.current) dest.current = { index, id };
@@ -179,7 +179,7 @@ const Board = observer(() => {
                     </div>
                 </div>
             </div>
-
+            {/* Card DND mask */}
             {
                 dnd.dragging &&
                 <Dnd>
@@ -187,6 +187,7 @@ const Board = observer(() => {
                     </div>
                 </Dnd>
             }
+            {/* List DND Mask */}
             {
                 dragging &&
                 <Dnd>

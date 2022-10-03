@@ -41,3 +41,7 @@
 .List__add:hover {
     background-color: #00000020;
 }
+
+.List__wrapper {
+    height: calc(100vh - 100px);
+}

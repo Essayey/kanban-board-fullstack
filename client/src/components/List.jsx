@@ -102,85 +102,88 @@ const List = observer((props) => {
     }
 
     return (
-        <div
-            ref={listRef}
+        <div className='List__wrapper'
             {...props}
-            className="List"
-            onDragEnter={dnd.dragging && props.cards.length === 0 ? e => handleCardDragEnter(e) : props.onDragEnter}
-        >
-            <CloseButton
-                style={{ position: 'absolute', top: 5, right: 5 }}
-                onClick={() => setIsListDeleting(true)}
-            />
-            <div style={{ height: 30 }}>
-                {titleEditing
-                    ? <form
-                        style={{}}
-                        ref={inputRef}
-                        onSubmit={e => editTitle(e)}
-                    >
-                        <Input
-                            value={listTitle}
-                            onChange={e => setListTitle(e.target.value)}
-                            autoFocus
-                            style={{ fontWeight: '700', fontSize: 18, margin: 0, padding: 0, marginLeft: -1, textAlign: 'left', height: 24 }}
-                        />
-                    </form>
-                    : <h3
-                        style={{ height: '100%', fontSize: 18 }}
-                        onClick={() => setTitleEditing(true)}
-                    >
-                        {props.title + ' order: ' + props.order}
-                    </h3>
-                }
-            </div>
+            onDragEnter={dnd.dragging && props.cards.length === 0 ? e => handleCardDragEnter(e) : props.onDragEnter}>
+            <div
+                ref={listRef}
+                className="List"
+            >
+                <CloseButton
+                    style={{ position: 'absolute', top: 5, right: 5 }}
+                    onClick={() => setIsListDeleting(true)}
+                />
+                <div style={{ height: 30 }}>
+                    {titleEditing
+                        ? <form
+                            style={{}}
+                            ref={inputRef}
+                            onSubmit={e => editTitle(e)}
+                        >
+                            <Input
+                                value={listTitle}
+                                onChange={e => setListTitle(e.target.value)}
+                                autoFocus
+                                style={{ fontWeight: '700', fontSize: 18, margin: 0, padding: 0, marginLeft: -1, textAlign: 'left', height: 24 }}
+                            />
+                        </form>
+                        : <h3
+                            style={{ height: '100%', fontSize: 18 }}
+                            onClick={() => setTitleEditing(true)}
+                        >
+                            {props.title + ' order: ' + props.order}
+                        </h3>
+                    }
+                </div>
 
 
-            <div className="List__cards" ref={cardListRef}>
-                {props.cards.map((card, cardIndex) =>
-                    <Card
-                        title={card.title}
-                        key={card.id}
-                        id={card.id}
-                        listId={props.id}
-                        listIndex={props.index}
-                        index={cardIndex}
-                        order={card.order}
-                    />)
+                <div className="List__cards" ref={cardListRef}>
+                    {props.cards.map((card, cardIndex) =>
+                        <Card
+                            title={card.title}
+                            key={card.id}
+                            id={card.id}
+                            listId={props.id}
+                            listIndex={props.index}
+                            index={cardIndex}
+                            order={card.order}
+                        />)
+                    }
+                    {cardAdding &&
+                        <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
+                            <Textarea
+                                style={{ marginTop: 0 }}
+                                autoFocus
+                                onKeyPress={e => submitOnEnter(e, formRef)}
+                                value={cardName}
+                                onChange={e => setCardName(e.target.value)}
+                            />
+                            <div style={{ display: 'flex', justifyContent: 'space-between' }}>
+                                <Button style={{ padding: 7, marginTop: 7 }} type='submit'>Add card</Button>
+                                <Button onClick={closeAddform} style={{ padding: 7, marginTop: 10 }}>Закрыть</Button>
+                            </div>
+
+                        </form>
+                    }
+                </div>
+                {cardAdding ||
+                    <button className="List__add" onClick={handleAddCard}>
+                        Add card +
+                    </button>
                 }
-                {cardAdding &&
-                    <form style={{ marginTop: 6 }} ref={formRef} onSubmit={e => addCard(e)}>
-                        <Textarea
-                            style={{ marginTop: 0 }}
-                            autoFocus
-                            onKeyPress={e => submitOnEnter(e, formRef)}
-                            value={cardName}
-                            onChange={e => setCardName(e.target.value)}
-                        />
-                        <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-                            <Button style={{ padding: 7, marginTop: 7 }} type='submit'>Add card</Button>
-                            <Button onClick={closeAddform} style={{ padding: 7, marginTop: 10 }}>Закрыть</Button>
+                {isListDeleting &&
+                    <Modal height='130px' width='280px' onHide={() => setIsListDeleting(false)} shouldHide={true}>
+                        Вы уверены, что хотите удалить список?
+                        <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
+                            <Button onClick={() => setIsListDeleting(false)}>Отмена</Button>
+                            <Button variant='danger' onClick={deleteList}>Удалить</Button>
                         </div>
-
-                    </form>
+                    </Modal>
                 }
-            </div>
-            {cardAdding ||
-                <button className="List__add" onClick={handleAddCard}>
-                    Add card +
-                </button>
-            }
-            {isListDeleting &&
-                <Modal height='130px' width='280px' onHide={() => setIsListDeleting(false)} shouldHide={true}>
-                    Вы уверены, что хотите удалить список?
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
-                        <Button onClick={() => setIsListDeleting(false)}>Отмена</Button>
-                        <Button variant='danger' onClick={deleteList}>Удалить</Button>
-                    </div>
-                </Modal>
-            }
 
+            </div>
         </div>
+
     )
 })
 

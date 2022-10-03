@@ -28,8 +28,10 @@ const Board = observer(() => {
     }, [id, location, boards.current.background])
 
     useEffect(() => {
+        body.style.overflow = 'hidden';
         return () => {
             body.style.background = '#f8f8f8'
+            body.style.overflow = 'auto';
         }
     }, [])
 
@@ -53,6 +55,75 @@ const Board = observer(() => {
 
     useHide(closeForm, addListRef);
 
+    // Drag and Drop lists
+
+    const dragItemNode = useRef();
+
+    const initialSrcIndex = useRef();
+    const src = useRef();
+    const dest = useRef();
+
+    const [dragging, setDragging] = useState(false);
+
+    const handleDragEnd = () => {
+        dragItemNode.current.removeEventListener('dragend', handleDragEnd);
+
+        // Request
+        if (dest.current.index !== initialSrcIndex.current) {
+            src.current = { ...src.current, order: initialSrcIndex.current }
+            listApi.move(src.current, dest.current).then(board => boards.setBoard(board));
+        }
+
+        dragItemNode.current = null;
+        src.current = null;
+        dest.current = null;
+        initialSrcIndex.current = null;
+
+        setDragging(false);
+    }
+
+    const handleDragStart = (e, index, id) => {
+        if (e.target.className !== 'List') return;
+
+        dragItemNode.current = e.target;
+        initialSrcIndex.current = index;
+
+        const rect = e.target.getBoundingClientRect()
+        dnd.setRect(rect);
+        dnd.setShift({ x: e.clientX - rect.left, y: e.clientY - rect.top });
+        dnd.setNode(e.target.cloneNode(true))
+
+        src.current = { id, index };
+        dest.current = { id, index };
+
+        dragItemNode.current.addEventListener('dragend', handleDragEnd);
+
+        e.target.style.opacity = '0';
+
+
+        setTimeout(() => {
+            e.target.style.opacity = '1';
+        }, 0);
+
+        setDragging(true);
+    }
+
+    const handleDragEnter = (e, index, id) => {
+        if (e.target.className !== 'List') return;
+        e.preventDefault();
+
+        if (id !== src.current.id || index === initialSrcIndex.current) dest.current = { index, id };
+
+        boards.moveList(src.current.index, dest.current.index);
+        src.current = { ...src.current, index }
+    }
+
+    const getStyle = (index) => {
+        if (src.current.index === index) return { color: 'transparent', background: '#ffffff33' };
+        return {}
+    }
+
+
     return (
         <div className='Board'>
             <Sidebar updated={boards.current.name} />
@@ -64,7 +135,20 @@ const Board = observer(() => {
                 <div className="Board__inner">
                     <div className="Board__lists">
                         {boards.current?.lists?.map((list, index) =>
-                            <List title={list.title} key={list.id} cards={list.cards} id={list.id} index={index} />
+                            <List
+                                draggable
+                                onDragStart={e => handleDragStart(e, index, list.id)}
+                                onDragEnter={dragging ? e => handleDragEnter(e, index, list.id) : null}
+                                style={dragging ? getStyle(index) : {}}
+
+                                title={list.title}
+                                key={list.id}
+                                cards={list.cards}
+                                id={list.id}
+                                index={index}
+                                order={list.order}
+                                dragging={dragging && src.current.index === index}
+                            />
                         )}
 
                         <div
@@ -100,7 +184,13 @@ const Board = observer(() => {
                 dnd.dragging &&
                 <Dnd>
                     <div className='Card'>
-                        DRAGGING
+                    </div>
+                </Dnd>
+            }
+            {
+                dragging &&
+                <Dnd>
+                    <div className='List'>
                     </div>
                 </Dnd>
             }

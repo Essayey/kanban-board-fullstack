@@ -46,4 +46,10 @@ export default class BoardStore {
         lists[dest.listIndex].cards.splice(dest.cardIndex, 0, lists[src.listIndex].cards.splice(src.cardIndex, 1)[0]);
         this._board.lists = lists;
     }
+
+    moveList(src, dest) {
+        const lists = JSON.parse(JSON.stringify(this._board.lists));
+        lists.splice(dest, 0, lists.splice(src, 1)[0]);
+        this._board.lists = lists;
+    }
 }

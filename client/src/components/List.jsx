@@ -14,16 +14,17 @@ import { listApi } from '../http/listAPI';
 import CloseButton from './UI/CloseButton/CloseButton';
 import Modal from './UI/Modal/Modal';
 import { observer } from 'mobx-react-lite';
+import { useEffect } from 'react';
 
-const List = observer(({ title, cards, id, index }) => {
+const List = observer((props) => {
     const { boards } = useContext(Context)
     // Edit title
     const [titleEditing, setTitleEditing] = useState(false);
-    const [listTitle, setListTitle] = useState(title);
+    const [listTitle, setListTitle] = useState(props.title);
     const inputRef = useRef();
     const closeTitleEditing = () => {
         setTitleEditing(false);
-        setListTitle(title)
+        setListTitle(props.title)
     }
     useHide(closeTitleEditing, inputRef)
 
@@ -31,7 +32,7 @@ const List = observer(({ title, cards, id, index }) => {
         e.preventDefault();
         if (listTitle === '') return;
         // Request //
-        listApi.update(id, listTitle).then(data => boards.setBoard(data));
+        listApi.update(props.id, listTitle).then(data => boards.setBoard(data));
         setTitleEditing(false);
     }
 
@@ -50,9 +51,9 @@ const List = observer(({ title, cards, id, index }) => {
     const addCard = e => {
         e.preventDefault();
         // Request //
-        cardApi.create(id, cardName).then(board => boards.setBoard(board));
+        cardApi.create(props.id, cardName).then(board => boards.setBoard(board));
         // Add card before getting response
-        boards.addCard(cardName, id);
+        boards.addCard(cardName, props.id);
 
         closeAddform();
     }
@@ -68,7 +69,7 @@ const List = observer(({ title, cards, id, index }) => {
     const [isListDeleting, setIsListDeleting] = useState(false);
 
     const deleteList = () => {
-        listApi.delete(id).then(data => boards.setBoard(data))
+        listApi.delete(props.id).then(data => boards.setBoard(data))
         setIsListDeleting(false);
     }
 
@@ -77,17 +78,35 @@ const List = observer(({ title, cards, id, index }) => {
     const { dnd } = useContext(Context);
     const handleCardDragEnter = e => {
         e.preventDefault();
-        dnd.setDest({ listId: id, cardIndex: 0, listIndex: index })
+        dnd.setDest({ listId: props.id, cardIndex: 0, listIndex: props.index })
         boards.moveCard(dnd.src, dnd.dest)
-        dnd.setSrc({ ...dnd.src, cardIndex: 0, listIndex: index })
+        dnd.setSrc({ ...dnd.src, cardIndex: 0, listIndex: props.index })
     }
+    //
+    const listRef = useRef();
+    const listRect = useRef();
+    useEffect(() => {
+        listRect.current = listRef.current.getBoundingClientRect();
+    }, [props.id, props.cards.length])
 
+    if (props.dragging) {
+        return (
+            <div
+                {...props}
+                className='List'
+                onDragEnter={dnd.dragging && props.cards.length === 0 ? e => handleCardDragEnter(e) : props.onDragEnter}
+                style={{ width: listRect.current.width, height: listRect.current.height, background: '#00000021' }}>
 
+            </div>
+        )
+    }
 
     return (
         <div
+            ref={listRef}
+            {...props}
             className="List"
-            onDragEnter={dnd.dragging && cards.length === 0 ? e => handleCardDragEnter(e) : null}
+            onDragEnter={dnd.dragging && props.cards.length === 0 ? e => handleCardDragEnter(e) : props.onDragEnter}
         >
             <CloseButton
                 style={{ position: 'absolute', top: 5, right: 5 }}
@@ -107,19 +126,24 @@ const List = observer(({ title, cards, id, index }) => {
                             style={{ fontWeight: '700', fontSize: 18, margin: 0, padding: 0, marginLeft: -1, textAlign: 'left', height: 24 }}
                         />
                     </form>
-                    : <h3 style={{ height: '100%', fontSize: 18 }} onClick={() => setTitleEditing(true)}>{title}</h3>
+                    : <h3
+                        style={{ height: '100%', fontSize: 18 }}
+                        onClick={() => setTitleEditing(true)}
+                    >
+                        {props.title + ' order: ' + props.order}
+                    </h3>
                 }
             </div>
 
 
             <div className="List__cards" ref={cardListRef}>
-                {cards.map((card, cardIndex) =>
+                {props.cards.map((card, cardIndex) =>
                     <Card
                         title={card.title}
                         key={card.id}
                         id={card.id}
-                        listId={id}
-                        listIndex={index}
+                        listId={props.id}
+                        listIndex={props.index}
                         index={cardIndex}
                         order={card.order}
                     />)

@@ -27,6 +27,33 @@ class ListController {
 
         return res.json(await getBoard(list.boardId));
     }
+    async move(req, res, next) {
+        const { src, dest } = req.body;
+        if (src.id === dest.id) {
+            return next(ApiError.badRequest('Src and dest are the same'));
+        }
+        const srcList = await List.findOne({ where: { id: src.id } });
+
+        if (src.order < dest.index) {
+            await List.findAll({
+                where: { order: { [Op.between]: [src.order, dest.index] }, boardId: srcList.boardId }
+            }).then(lists => lists.map(list => list.decrement('order')));
+            srcList.set('order', dest.index);
+            console.log('FIRST')
+        }
+        else {
+            await List.findAll({
+                where: { order: { [Op.between]: [dest.index, src.order] }, boardId: srcList.boardId }
+            }).then(lists => lists.map(list => list.increment('order')));
+            srcList.set('order', dest.index);
+            console.log('SECOND')
+        }
+
+        await srcList.save();
+
+        return res.json(await getBoard(srcList.boardId));
+    }
+
     async delete(req, res, next) {
         const { id } = req.params;
         const list = await List.findOne({ where: { id } });

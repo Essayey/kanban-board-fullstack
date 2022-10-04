@@ -4,7 +4,8 @@ const { DataTypes } = require('sequelize')
 const Board = sequelize.define('board', {
     id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
     name: { type: DataTypes.STRING, allowNull: false },
-    background: { type: DataTypes.STRING, allowNull: false }
+    background: { type: DataTypes.STRING, allowNull: false },
+    inviteToken: { type: DataTypes.STRING, allowNull: false }
 })
 
 const List = sequelize.define('list', {
@@ -40,7 +41,8 @@ const User = sequelize.define('user', {
 })
 
 const UserBoard = sequelize.define('user_board', {
-    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true }
+    id: { type: DataTypes.INTEGER, primaryKey: true, autoIncrement: true },
+    role: { type: DataTypes.STRING, defaultValue: 'Moderator' }
 })
 
 const UserCard = sequelize.define('user_card', {

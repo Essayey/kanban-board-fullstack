@@ -13,6 +13,7 @@ import Modal from './UI/Modal/Modal';
 
 const BoardMenu = observer(({ contrastColor }) => {
     const { boards } = useContext(Context);
+    const { user: userStore } = useContext(Context);
     const navigate = useNavigate();
 
     // Change name
@@ -51,6 +52,10 @@ const BoardMenu = observer(({ contrastColor }) => {
         setIsBgEditing(false);
         setBackground(false);
     }
+
+    // Members modal + generate invite link
+    const [isMembersOpen, setIsMembersOpen] = useState(false);
+
     // Delete board
     const [isBoardDeleting, setIsBoardDeleting] = useState(false);
     const deleteBoard = () => {
@@ -91,6 +96,25 @@ const BoardMenu = observer(({ contrastColor }) => {
                         />
                         <div style={{ display: 'flex', justifyContent: 'center', marginTop: 15 }}>
                             <Button onClick={changeColorTheme}>Изменить тему</Button>
+                        </div>
+                    </Modal>
+                }
+                <Button onClick={() => setIsMembersOpen(true)} variant={'gray'}>Участники</Button>
+                {isMembersOpen &&
+                    <Modal onHide={() => setIsMembersOpen(false)} shouldHide={true} height="fit-content">
+                        <h3>Участники</h3>
+                        {
+                            boards.current.users.map((user, index) =>
+                                <div>
+                                    <h4 style={{ display: 'inline' }}>{index + 1}. {user.email}</h4>
+                                    - {user.user_board.role}
+                                    {user.id === userStore.user.id ? ' (You)' : null}
+                                </div>
+                            )
+                        }
+                        <div>
+                            <h3 style={{ marginTop: 15 }}>Пригласить</h3>
+
                         </div>
                     </Modal>
                 }

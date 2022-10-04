@@ -147,7 +147,7 @@ const Board = observer(() => {
                                 id={list.id}
                                 index={index}
                                 order={list.order}
-                                dragging={dragging && src.current.index === index}
+                                dragging={dragging ? src.current.index === index : false}
                             />
                         )}
 

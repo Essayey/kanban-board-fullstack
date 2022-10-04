@@ -2,8 +2,9 @@ import CardModal from "./components/Modals/CardModal";
 import Auth from "./pages/Auth";
 import Board from "./pages/Board";
 import Boards from "./pages/Boards";
+import Invite from "./pages/Invite";
 import Main from "./pages/Main";
-import { BOARDS_ROUTE, BOARD_ROUTE, CARD_MODAL_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from "./utils/consts";
+import { BOARDS_ROUTE, BOARD_ROUTE, CARD_MODAL_ROUTE, INVITE_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from "./utils/consts";
 
 export const publicRoutes = [
     { path: MAIN_ROUTE, Component: Main },
@@ -18,4 +19,5 @@ export const privateRoutes = [
             { path: CARD_MODAL_ROUTE, Component: CardModal }
         ]
     },
+    { path: INVITE_ROUTE, Component: Invite }
 ]

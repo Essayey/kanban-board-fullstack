@@ -54,11 +54,11 @@ class BoardController {
         const { inviteToken } = req.body;
         const board = await Board.findOne({ where: { inviteToken } });
         if (!board) {
-            return next(ApiError.notFound('Доска не найдена или ссылка не действительна'), req, res);
+            return next(ApiError.badRequest('Доска не найдена или ссылка не действительна'), req, res);
         }
         const userBoard = await UserBoard.findOne({ where: { boardId: board.id, userId: req.user.id } });
         if (userBoard) {
-            return next(ApiError.notFound('Пользователь является участником доски'), req, res);
+            return next(ApiError.badRequest('Пользователь является участником доски'), req, res);
         }
         await UserBoard.create({ boardId: board.id, userId: req.user.id, role: 'Member' });
 

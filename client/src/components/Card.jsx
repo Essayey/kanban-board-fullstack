@@ -7,7 +7,7 @@ import '../Styles/Card.css'
 
 
 
-const Card = observer(({ title, id, listId, index, listIndex, order }) => {
+const Card = observer(({ title, id, listId, index, listIndex }) => {
     const location = useLocation();
     const navigate = useNavigate();
 
@@ -78,7 +78,7 @@ const Card = observer(({ title, id, listId, index, listIndex, order }) => {
             onDragOver={e => e.preventDefault()}
             style={dnd.dragging ? getStyle() : {}}
         >
-            {title + ' order:' + order}
+            {title}
 
         </div>
     )

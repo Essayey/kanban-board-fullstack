@@ -12,8 +12,8 @@ router.put('/generateInviteToken', authMiddleware, boardController.generateInvit
 router.put('/background', authMiddleware, boardController.updateBackground) // Update background
 router.put('/name', authMiddleware, boardController.updateName) // Update name
 
-router.put('/joinBoard', authMiddleware, boardController.joinBoard) // joinBoard
-router.put('/kickMember', authMiddleware, boardController.kickMember)
+router.put('/join', authMiddleware, boardController.joinBoard) // joinBoard
+router.put('/kick', authMiddleware, boardController.kickMember)
 
 router.delete('/:id', authMiddleware, boardController.delete) // Delete board by id
 

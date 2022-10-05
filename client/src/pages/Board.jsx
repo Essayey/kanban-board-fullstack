@@ -4,7 +4,7 @@ import Sidebar from '../components/Sidebar'
 import List from '../components/List'
 import { useEffect } from 'react'
 import { boardApi } from '../http/boardAPI'
-import { Outlet, useLocation, useParams } from 'react-router-dom'
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Context } from '..'
 import { observer } from 'mobx-react-lite'
 import Input from '../components/UI/Input/Input'
@@ -15,16 +15,29 @@ import { listApi } from '../http/listAPI'
 import { cc } from '../utils/contrastColor'
 import BoardMenu from '../components/BoardMenu'
 import Dnd from '../components/UI/DnDElement/Dnd'
+import { BOARDS_ROUTE } from '../utils/consts'
 
 const Board = observer(() => {
     const { boards, dnd } = useContext(Context);
     const { id } = useParams();
     const location = useLocation();
+    const navigate = useNavigate();
 
     const body = document.querySelector('body');
-    useEffect(() => {
+    const getBoard = () => {
         boardApi.getBoard(id).then(data => boards.setBoard(data))
-            .finally(() => body.style.background = boards.current.background);
+            .then(() => body.style.background = boards.current.background)
+            .catch(() => navigate(BOARDS_ROUTE));
+    }
+    useEffect(() => {
+        getBoard();
+        const interval = setInterval(() => {
+            if (!dragging && !dnd.dragging) getBoard();
+        }, 4000)
+
+        return () => {
+            clearInterval(interval);
+        }
     }, [id, location, boards.current.background])
 
     useEffect(() => {
@@ -136,7 +149,7 @@ const Board = observer(() => {
                     <div className="Board__lists">
                         {boards.current?.lists?.map((list, index) =>
                             <List
-                                draggable
+                                draggable={true}
                                 onDragStart={e => handleDragStart(e, index, list.id)}
                                 onDragEnter={dragging ? e => handleDragEnter(e, index, list.id) : null}
                                 style={dragging ? getStyle(index) : {}}
@@ -146,8 +159,7 @@ const Board = observer(() => {
                                 cards={list.cards}
                                 id={list.id}
                                 index={index}
-                                order={list.order}
-                                dragging={dragging ? src.current.index === index : false}
+                                dragging={dragging ? src.current.index === index : undefined}
                             />
                         )}
 

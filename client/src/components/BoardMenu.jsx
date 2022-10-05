@@ -1,12 +1,13 @@
 import { observer } from 'mobx-react-lite';
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
+import { Fragment } from 'react';
 import { useEffect } from 'react';
 import { CirclePicker } from 'react-color';
 import { useNavigate } from 'react-router-dom';
 import { Context } from '..';
 import { useHide } from '../hooks';
 import { boardApi } from '../http/boardAPI';
-import { BOARDS_ROUTE, colors } from '../utils/consts';
+import { BOARDS_ROUTE, colors, SITE_LINK } from '../utils/consts';
 import Button from './UI/Button/Button'
 import Input from './UI/Input/Input';
 import Modal from './UI/Modal/Modal';
@@ -56,18 +57,35 @@ const BoardMenu = observer(({ contrastColor }) => {
     // Members modal + generate invite link
     const [isMembersOpen, setIsMembersOpen] = useState(false);
 
+    const copyLink = () => {
+        navigator.clipboard.writeText(SITE_LINK + '/invite/' + boards.current.inviteToken);
+    }
+
+    const isModerator = useMemo(() => {
+        if (userStore.user.id === boards.current.users?.find(user => user.user_board.role === 'Moderator').id) {
+            return true;
+        }
+        return false;
+    })
+
+    const kick = id => {
+        console.log(id, boards.current.id)
+        boardApi.kickMember(id, boards.current.id).then(data => boards.setBoard(data));
+    }
+
     // Delete board
     const [isBoardDeleting, setIsBoardDeleting] = useState(false);
     const deleteBoard = () => {
         boardApi.delete(boards.current.id).then(() => navigate(BOARDS_ROUTE));
     }
 
+
     return (
         <div className='BoardMenu'>
             <div className='BoardMenu__main'>
                 {!isNameEditing
                     ? <h3
-                        onClick={() => setIsNameEditing(true)}
+                        onClick={isModerator ? () => setIsNameEditing(true) : null}
                         style={{ color: contrastColor }}
                     >
                         {boards.current.name}
@@ -81,57 +99,54 @@ const BoardMenu = observer(({ contrastColor }) => {
                         />
                     </form>
                 }
-                <Button onClick={() => setIsBgEditing(true)} variant={'gray'}>Change color theme</Button>
-                {isBgEditing &&
-                    <Modal onHide={closeChangeBg} shouldHide={true} height='180px'>
-                        <h3 style={{ marginBottom: 15, textAlign: 'center' }}>
-                            Выберите тему
-                        </h3>
-                        <CirclePicker
-                            width='100%'
-                            color={background}
-                            onChange={color => setBackground(color)}
-                            colors={colors}
-                            circleSize={36}
-                        />
-                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 15 }}>
-                            <Button onClick={changeColorTheme}>Изменить тему</Button>
-                        </div>
-                    </Modal>
-                }
+
                 <Button onClick={() => setIsMembersOpen(true)} variant={'gray'}>Участники</Button>
                 {isMembersOpen &&
                     <Modal onHide={() => setIsMembersOpen(false)} shouldHide={true} height="fit-content">
                         <h3>Участники</h3>
                         {
                             boards.current.users.map((user, index) =>
-                                <div>
-                                    <h4 style={{ display: 'inline' }}>{index + 1}. {user.email}</h4>
-                                    - {user.user_board.role}
-                                    {user.id === userStore.user.id ? ' (You)' : null}
+                                <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginTop: 15 }}>
+                                    <div>
+                                        <h4 style={{ display: 'inline' }}>{index + 1}. {user.email}</h4>
+                                        - {user.user_board.role}
+                                        {user.id === userStore.user.id ? ' (You)' : null}
+                                    </div>
+                                    {isModerator && user.id !== userStore.user.id &&
+                                        <Button variant='danger' onClick={() => kick(user.id)}>Выгнать</Button>
+                                    }
+
                                 </div>
                             )
                         }
                         <div>
                             <h3 style={{ marginTop: 15 }}>Пригласить</h3>
-
+                            <Button style={{ marginTop: 15 }} onClick={copyLink}>Копировать ссылку на доску</Button>
                         </div>
                     </Modal>
                 }
-            </div>
 
-            <Button onClick={() => setIsBoardDeleting(true)} variant='gray'>Удалить доску</Button>
-            {isBoardDeleting &&
-                <Modal onHide={() => setIsBoardDeleting(false)} shouldHide={true} height='135px' width='300px'>
-                    <h3 style={{ marginBottom: 15, textAlign: 'center' }}>
-                        Вы уверены, что хотите удалить эту доску?
-                    </h3>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
-                        <Button onClick={() => setIsBoardDeleting(false)}>Назад</Button>
-                        <Button variant='danger' onClick={deleteBoard}>Удалить доску</Button>
-                    </div>
-                </Modal>
+
+            </div>
+            {
+                isModerator &&
+                <Fragment>
+                    <Button onClick={() => setIsBoardDeleting(true)} variant='gray'>Удалить доску</Button>
+                    {
+                        isBoardDeleting &&
+                        <Modal onHide={() => setIsBoardDeleting(false)} shouldHide={true} height='135px' width='300px'>
+                            <h3 style={{ marginBottom: 15, textAlign: 'center' }}>
+                                Вы уверены, что хотите удалить эту доску?
+                            </h3>
+                            <div style={{ display: 'flex', justifyContent: 'space-between', marginTop: 15 }}>
+                                <Button onClick={() => setIsBoardDeleting(false)}>Назад</Button>
+                                <Button variant='danger' onClick={deleteBoard}>Удалить доску</Button>
+                            </div>
+                        </Modal>
+                    }
+                </Fragment>
             }
+
         </div >
     )
 })

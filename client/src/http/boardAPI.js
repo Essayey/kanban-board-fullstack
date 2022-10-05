@@ -21,6 +21,14 @@ class BoardApi {
         const { data } = await $authHost.put('api/board/background', { id, value });
         return data;
     }
+    joinBoard = async (inviteToken) => {
+        const { data } = await $authHost.put('api/board/join', { inviteToken });
+        return data;
+    }
+    kickMember = async (userId, boardId) => {
+        const { data } = await $authHost.put('api/board/kick', { userId, boardId });
+        return data;
+    }
     delete = async (id) => {
         await $authHost.delete('api/board/' + id);
     }

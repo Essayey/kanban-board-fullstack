@@ -1,4 +1,4 @@
-import React, { useContext, useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import '../Styles/List.css'
 import Card from './Card';
 
@@ -17,7 +17,15 @@ import { observer } from 'mobx-react-lite';
 import { useEffect } from 'react';
 
 const List = observer((props) => {
-    const { boards } = useContext(Context)
+    const { boards, user } = useContext(Context)
+
+    const isModerator = useMemo(() => {
+        if (user.user.id === boards.current.users?.find(user => user.user_board.role === 'Moderator').id) {
+            return true;
+        }
+        return false;
+    })
+
     // Edit title
     const [titleEditing, setTitleEditing] = useState(false);
     const [listTitle, setListTitle] = useState(props.title);
@@ -109,10 +117,14 @@ const List = observer((props) => {
                 ref={listRef}
                 className="List"
             >
-                <CloseButton
-                    style={{ position: 'absolute', top: 5, right: 5 }}
-                    onClick={() => setIsListDeleting(true)}
-                />
+                {
+                    isModerator &&
+                    <CloseButton
+                        style={{ position: 'absolute', top: 5, right: 5 }}
+                        onClick={() => setIsListDeleting(true)}
+                    />
+                }
+
                 <div style={{ height: 30 }}>
                     {titleEditing
                         ? <form
@@ -131,7 +143,7 @@ const List = observer((props) => {
                             style={{ height: '100%', fontSize: 18 }}
                             onClick={() => setTitleEditing(true)}
                         >
-                            {props.title + ' order: ' + props.order}
+                            {props.title}
                         </h3>
                     }
                 </div>
@@ -146,7 +158,6 @@ const List = observer((props) => {
                             listId={props.id}
                             listIndex={props.index}
                             index={cardIndex}
-                            order={card.order}
                         />)
                     }
                     {cardAdding &&

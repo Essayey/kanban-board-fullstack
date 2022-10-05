@@ -1,4 +1,4 @@
-import React, { useRef, useState } from 'react'
+import React, { useContext, useMemo, useRef, useState } from 'react'
 import Modal from '../UI/Modal/Modal'
 import Button from '../UI/Button/Button'
 import CloseButton from '../UI/CloseButton/CloseButton'
@@ -8,21 +8,31 @@ import { submitOnEnter } from '../../utils'
 import { useNavigate, useParams } from 'react-router-dom'
 import { cardApi } from '../../http/cardAPI'
 import { useEffect } from 'react'
+import { Context } from '../..'
 
 const CardModal = (props) => {
     const [card, setCard] = useState({});
     const { cardId } = useParams();
+    const { user, boards } = useContext(Context)
+
+    const isModerator = useMemo(() => {
+        if (user.user.id === boards.current.users?.find(user => user.user_board.role === 'Moderator').id) {
+            return true;
+        }
+        return false;
+    })
+
     useEffect(() => {
         cardApi.get(cardId).then(data => {
             setCard(data)
             setTitle(data.title);
-            setDescription(data.description);
+            setDescription(data.description || '');
         });
 
     }, [])
 
     const navigate = useNavigate();
-    //const card = { id: 0, title: 'Карточка .....', description: 'wefwef', listTitle: 'Doing' }
+
     // Edit title
     const titleFormRef = useRef();
     const [isTitleEditing, setIsTitleEditing] = useState(false);
@@ -45,10 +55,10 @@ const CardModal = (props) => {
     // Edit description
     const descFormRef = useRef();
     const [isDescriptionEditing, setIsDescriptionEditing] = useState(false);
-    const [description, setDescription] = useState(card.description);
+    const [description, setDescription] = useState(card.description || '');
     const closeDescriptionForm = () => {
         setIsDescriptionEditing(false);
-        setDescription(card.description);
+        setDescription(card.description || '');
     }
 
     useHide(closeDescriptionForm, descFormRef);
@@ -110,9 +120,13 @@ const CardModal = (props) => {
                         }
                     </pre>
                 }
-                <Button variant='danger' style={{ position: 'absolute', bottom: 5, left: 5 }} onClick={() => deleteCard(cardId)}>
-                    Удалить карточку
-                </Button>
+                {
+                    isModerator &&
+                    <Button variant='danger' style={{ position: 'absolute', bottom: 5, left: 5 }} onClick={() => deleteCard(cardId)}>
+                        Удалить карточку
+                    </Button>
+                }
+
             </div>
         </Modal >
     )

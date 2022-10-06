@@ -5,6 +5,7 @@ export const BOARDS_ROUTE = '/boards'
 export const BOARD_ROUTE = '/boards/:id'
 export const CARD_MODAL_ROUTE = '/boards/:id/:cardId'
 export const INVITE_ROUTE = '/invite/:token'
+export const CARDS_ROUTE = '/cards'
 
 export const SITE_LINK = 'http://localhost:3000'
 

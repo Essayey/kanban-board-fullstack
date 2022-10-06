@@ -99,7 +99,24 @@ const BoardMenu = observer(({ contrastColor }) => {
                         />
                     </form>
                 }
-
+                <Button onClick={() => setIsBgEditing(true)} variant={'gray'}>Change color theme</Button>
+                {isBgEditing && isModerator &&
+                    <Modal onHide={() => setIsBgEditing(false)} shouldHide={true} height='180px'>
+                        <h3 style={{ marginBottom: 15, textAlign: 'center' }}>
+                            Выберите тему
+                        </h3>
+                        <CirclePicker
+                            width='100%'
+                            color={background}
+                            onChange={color => setBackground(color)}
+                            colors={colors}
+                            circleSize={36}
+                        />
+                        <div style={{ display: 'flex', justifyContent: 'center', marginTop: 15 }}>
+                            <Button onClick={changeColorTheme}>Изменить тему</Button>
+                        </div>
+                    </Modal>
+                }
                 <Button onClick={() => setIsMembersOpen(true)} variant={'gray'}>Участники</Button>
                 {isMembersOpen &&
                     <Modal onHide={() => setIsMembersOpen(false)} shouldHide={true} height="fit-content">

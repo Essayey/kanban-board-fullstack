@@ -9,11 +9,12 @@ import { useNavigate, useParams } from 'react-router-dom'
 import { cardApi } from '../../http/cardAPI'
 import { useEffect } from 'react'
 import { Context } from '../..'
+import { observer } from 'mobx-react-lite'
 
-const CardModal = (props) => {
+const CardModal = observer((props) => {
     const [card, setCard] = useState({});
     const { cardId } = useParams();
-    const { user, boards } = useContext(Context)
+    const { user, boards, socketStore } = useContext(Context)
 
     const isModerator = useMemo(() => {
         if (user.user.id === boards.current.users?.find(user => user.user_board.role === 'Moderator').id) {
@@ -47,7 +48,8 @@ const CardModal = (props) => {
         e.preventDefault()
         if (title === '') return;
         setIsTitleEditing(false);
-        cardApi.updateTitle(cardId, title).then(card => setCard(card));
+        cardApi.updateTitle(cardId, title).then(card => setCard(card))
+            .then(() => socketStore.boardUpdate());
         // While waiting response, set value on client
         setCard({ ...card, title: title })
     }
@@ -130,6 +132,6 @@ const CardModal = (props) => {
             </div>
         </Modal >
     )
-}
+})
 
 export default CardModal

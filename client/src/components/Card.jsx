@@ -1,14 +1,15 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useRef } from 'react'
-import { useLocation, useNavigate } from 'react-router-dom'
+import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import { Context } from '..';
 import { cardApi } from '../http/cardAPI';
 import '../Styles/Card.css'
 
 
 
-const Card = observer(({ title, id, listId, index, listIndex }) => {
+const Card = observer(({ title, id, listId, index, listIndex, socketEmitCallback }) => {
     const location = useLocation();
+    const { boardId } = useParams();
     const navigate = useNavigate();
 
 
@@ -21,7 +22,8 @@ const Card = observer(({ title, id, listId, index, listIndex }) => {
         dragItemNode.current = null;
         // Request //
         if (dnd.src.cardIndex !== index || dnd.src.listIndex !== listIndex) {
-            cardApi.move(dnd.src, dnd.dest).then(data => boards.setBoard(data));
+            cardApi.move(dnd.src, dnd.dest).then(data => boards.setBoard(data))
+                .then(() => socketEmitCallback());
         }
 
         dnd.setSrc(null);

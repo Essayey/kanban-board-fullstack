@@ -19,6 +19,7 @@ import { useEffect } from 'react';
 const List = observer((props) => {
     const { boards, user } = useContext(Context)
 
+
     const isModerator = useMemo(() => {
         if (user.user.id === boards.current.users?.find(user => user.user_board.role === 'Moderator').id) {
             return true;
@@ -40,7 +41,8 @@ const List = observer((props) => {
         e.preventDefault();
         if (listTitle === '') return;
         // Request //
-        listApi.update(props.id, listTitle).then(data => boards.setBoard(data));
+        listApi.update(props.id, listTitle).then(data => boards.setBoard(data))
+            .then(() => props.socketEmitCallback());
         setTitleEditing(false);
     }
 
@@ -59,7 +61,8 @@ const List = observer((props) => {
     const addCard = e => {
         e.preventDefault();
         // Request //
-        cardApi.create(props.id, cardName).then(board => boards.setBoard(board));
+        cardApi.create(props.id, cardName).then(board => boards.setBoard(board))
+            .then(() => props.socketEmitCallback());
         // Add card before getting response
         boards.addCard(cardName, props.id);
 
@@ -78,6 +81,7 @@ const List = observer((props) => {
 
     const deleteList = () => {
         listApi.delete(props.id).then(data => boards.setBoard(data))
+            .then(() => props.socketEmitCallback());
         setIsListDeleting(false);
     }
 
@@ -158,6 +162,8 @@ const List = observer((props) => {
                             listId={props.id}
                             listIndex={props.index}
                             index={cardIndex}
+
+                            socketEmitCallback={props.socketEmitCallback}
                         />)
                     }
                     {cardAdding &&

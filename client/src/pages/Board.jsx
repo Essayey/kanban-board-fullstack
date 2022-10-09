@@ -16,8 +16,12 @@ import { cc } from '../utils/contrastColor'
 import BoardMenu from '../components/BoardMenu'
 import Dnd from '../components/UI/DnDElement/Dnd'
 import { BOARDS_ROUTE } from '../utils/consts'
+import io from 'socket.io-client'
+import { useCallback } from 'react'
 
 const Board = observer(() => {
+    const socket = useRef(io('http://localhost:5000'));
+
     const { boards, dnd } = useContext(Context);
     const { id } = useParams();
     const location = useLocation();
@@ -31,13 +35,6 @@ const Board = observer(() => {
     }
     useEffect(() => {
         getBoard();
-        const interval = setInterval(() => {
-            if (!dragging && !dnd.dragging) getBoard();
-        }, 4000)
-
-        return () => {
-            clearInterval(interval);
-        }
     }, [id, location, boards.current.background])
 
     useEffect(() => {
@@ -47,6 +44,34 @@ const Board = observer(() => {
             body.style.overflow = 'auto';
         }
     }, [])
+    // Socket connection
+    const { socketStore } = useContext(Context);
+    const socketEmitCallback = useCallback(() => socket.current.emit('board-update', id));
+
+    useEffect(() => {
+        socket.current.on('connect', () => {
+            console.log('User connected: ' + socket.current.id)
+        })
+        socket.current.on('board-update', () => {
+            getBoard();
+        })
+        socket.current.on('msg', str => {
+            console.log(str)
+        })
+        socketStore.setBoardUpdateEmitCallback(socketEmitCallback);
+        return () => {
+            socket.current.on('disconnect', () => {
+                console.log('user disconnected');
+            });
+        }
+    }, [])
+
+    useEffect(() => {
+        socket.current.emit('join-room', id);
+        return () => {
+            socket.current.emit('leave-room', id);
+        }
+    }, [id])
 
     // Add list
     const addListRef = useRef();
@@ -60,7 +85,9 @@ const Board = observer(() => {
 
     const addList = e => {
         e.preventDefault();
-        listApi.create(id, listTitle).then(data => boards.setBoard(data));
+        listApi.create(id, listTitle).then(data => boards.setBoard(data))
+            .then(socketEmitCallback());
+
         // Add list before getting response
         boards.addList(listTitle);
         closeForm();
@@ -84,7 +111,8 @@ const Board = observer(() => {
         // Request
         if (dest.current.index !== initialSrcIndex.current) {
             src.current = { ...src.current, order: initialSrcIndex.current }
-            listApi.move(src.current, dest.current).then(board => boards.setBoard(board));
+            listApi.move(src.current, dest.current).then(board => boards.setBoard(board))
+                .then(() => socketEmitCallback());
         }
 
         dragItemNode.current = null;
@@ -160,6 +188,8 @@ const Board = observer(() => {
                                 id={list.id}
                                 index={index}
                                 dragging={dragging ? src.current.index === index : undefined}
+
+                                socketEmitCallback={socketEmitCallback}
                             />
                         )}
 

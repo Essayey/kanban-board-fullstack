@@ -13,7 +13,7 @@ import Input from './UI/Input/Input';
 import Modal from './UI/Modal/Modal';
 
 const BoardMenu = observer(({ contrastColor }) => {
-    const { boards } = useContext(Context);
+    const { boards, socketStore } = useContext(Context);
     const { user: userStore } = useContext(Context);
     const navigate = useNavigate();
 
@@ -36,7 +36,8 @@ const BoardMenu = observer(({ contrastColor }) => {
     const changeName = e => {
         e.preventDefault();
         if (boardName === '') return;
-        boardApi.updateName(boards.current.id, boardName).then(board => boards.setBoard(board));
+        boardApi.updateName(boards.current.id, boardName).then(board => boards.setBoard(board))
+            .then(() => socketStore.boardUpdate());
         setIsNameEditing(false);
     }
 
@@ -45,7 +46,8 @@ const BoardMenu = observer(({ contrastColor }) => {
     const [background, setBackground] = useState();
 
     const changeColorTheme = () => {
-        boardApi.updateBackground(boards.current.id, background.hex).then(board => boards.setBoard(board));
+        boardApi.updateBackground(boards.current.id, background.hex).then(board => boards.setBoard(board))
+            .then(() => socketStore.boardUpdate());;
         setIsBgEditing(false);
         setBackground(false);
     }
@@ -70,13 +72,15 @@ const BoardMenu = observer(({ contrastColor }) => {
 
     const kick = id => {
         console.log(id, boards.current.id)
-        boardApi.kickMember(id, boards.current.id).then(data => boards.setBoard(data));
+        boardApi.kickMember(id, boards.current.id).then(data => boards.setBoard(data))
+            .then(() => socketStore.boardUpdate());;
     }
 
     // Delete board
     const [isBoardDeleting, setIsBoardDeleting] = useState(false);
     const deleteBoard = () => {
-        boardApi.delete(boards.current.id).then(() => navigate(BOARDS_ROUTE));
+        boardApi.delete(boards.current.id).then(() => navigate(BOARDS_ROUTE))
+            .then(() => socketStore.boardUpdate());;
     }
 
 
@@ -99,9 +103,13 @@ const BoardMenu = observer(({ contrastColor }) => {
                         />
                     </form>
                 }
-                <Button onClick={() => setIsBgEditing(true)} variant={'gray'}>Change color theme</Button>
+                {isModerator &&
+                    <Button onClick={() => setIsBgEditing(true)} variant={'gray'}>
+                        Change color theme
+                    </Button>
+                }
                 {isBgEditing && isModerator &&
-                    <Modal onHide={() => setIsBgEditing(false)} shouldHide={true} height='180px'>
+                    <Modal onHide={closeChangeBg} shouldHide={true} height='180px'>
                         <h3 style={{ marginBottom: 15, textAlign: 'center' }}>
                             Выберите тему
                         </h3>

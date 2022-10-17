@@ -24,18 +24,17 @@ const Auth = () => {
         try {
             let data;
             if (isLogin) {
-                data = await login(email, password);
+                data = await login(email, password).then(() => navigate(MAIN_ROUTE));
             }
             else {
                 if (password !== confirmPassword) {
                     alert('Пароли не совпадают');
                     return;
                 }
-                data = await registration(email, password);
+                data = await registration(email, password).then(() => navigate(MAIN_ROUTE));
             }
             user.setUser(data);
             user.setIsAuth(true);
-            navigate(MAIN_ROUTE);
         }
         catch (e) {
             console.log(e.response.data.message)

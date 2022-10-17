@@ -1,7 +1,7 @@
 const ApiError = require('../error/ApiError');
 const { List, UserBoard } = require('../models/models')
 const { Op } = require("sequelize");
-const getBoard = require("./utils");
+const getBoard = require("../utils");
 
 class ListController {
     async create(req, res, next) {

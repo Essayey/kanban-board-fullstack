@@ -1,4 +1,4 @@
-const { Board, List, Card, User, UserBoard } = require('../models/models');
+const { Board, List, Card, User } = require('../models/models');
 
 const getBoard = async (id) => {
     const board = await Board.findOne({

@@ -2,7 +2,7 @@ const { Board } = require('../models/models')
 const { UserBoard } = require('../models/models')
 
 const ApiError = require('../error/ApiError');
-const getBoard = require('./utils');
+const getBoard = require('../utils');
 const crypto = require("crypto");
 
 const generateToken = () => crypto.randomBytes(30).toString('hex');

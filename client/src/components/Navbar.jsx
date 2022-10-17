@@ -1,6 +1,6 @@
-import { observe, observer } from 'mobx-react-lite'
+import { observer } from 'mobx-react-lite'
 import React, { Fragment, useContext, useState } from 'react'
-import { useNavigate } from 'react-router-dom'
+import { Link } from 'react-router-dom'
 import { Context } from '..'
 import '../Styles/Navbar.css'
 import { BOARDS_ROUTE, LOGIN_ROUTE, MAIN_ROUTE, REGISTRATION_ROUTE } from '../utils/consts'
@@ -8,7 +8,6 @@ import Button from './UI/Button/Button'
 
 const Navbar = observer(() => {
     const { user } = useContext(Context)
-    const navigate = useNavigate();
 
     const handleLogout = () => {
         localStorage.removeItem('token');
@@ -18,15 +17,21 @@ const Navbar = observer(() => {
     return (
         <div className='Navbar'>
             <div className="Navbar__inner">
-                <div onClick={() => navigate(MAIN_ROUTE)}>LOGO</div>
+                <Link to={MAIN_ROUTE}>LOGO</Link>
                 <div className="Navbar__links">
                     {!user.isAuth
                         ? <Fragment>
-                            <Button onClick={() => navigate(LOGIN_ROUTE)}>Войти</Button>
-                            <Button onClick={() => navigate(REGISTRATION_ROUTE)}>Регистрация</Button>
+                            <Link to={LOGIN_ROUTE} style={{ marginRight: 10 }}>
+                                <Button>Войти</Button>
+                            </Link>
+                            <Link to={REGISTRATION_ROUTE}>
+                                <Button>Регистрация</Button>
+                            </Link>
                         </Fragment>
                         : <Fragment>
-                            <Button onClick={() => navigate(BOARDS_ROUTE)}>Мои доски</Button>
+                            <Link to={BOARDS_ROUTE} style={{ marginRight: 10 }}>
+                                <Button>Мои доски</Button>
+                            </Link>
                             <Button onClick={handleLogout}>Выйти</Button>
                         </Fragment>
                     }

@@ -1,6 +1,6 @@
 import { observer } from 'mobx-react-lite';
 import React, { useContext, useRef } from 'react'
-import { useLocation, useNavigate, useParams } from 'react-router-dom'
+import { useLocation, useNavigate } from 'react-router-dom'
 import { Context } from '..';
 import { cardApi } from '../http/cardAPI';
 import '../Styles/Card.css'
@@ -9,7 +9,6 @@ import '../Styles/Card.css'
 
 const Card = observer(({ title, id, listId, index, listIndex, socketEmitCallback }) => {
     const location = useLocation();
-    const { boardId } = useParams();
     const navigate = useNavigate();
 
 
